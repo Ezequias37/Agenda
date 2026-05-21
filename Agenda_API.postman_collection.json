@@ -1,0 +1,133 @@
+{
+  "info": {
+    "name": "Agenda API - Teste de Email",
+    "description": "Coleção para testar envio de e-mail com Mailtrap",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Criar Cliente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao.silva@test.com\",\n  \"telefone\": \"(11) 99999-8888\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/clientes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "clientes"
+          ]
+        },
+        "description": "Cria um novo cliente. Salve o ID retornado para usar nos próximos passos."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Listar Clientes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/clientes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "clientes"
+          ]
+        },
+        "description": "Lista todos os clientes cadastrados"
+      },
+      "response": []
+    },
+    {
+      "name": "3. Criar Agendamento (Dispara Email Confirmação)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cliente\": {\n    \"id\": 1\n  },\n  \"dataHora\": \"2026-05-25T14:30:00\",\n  \"descricao\": \"Consulta de rotina\",\n  \"status\": \"AGENDADO\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/agendamentos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "agendamentos"
+          ]
+        },
+        "description": "Cria um novo agendamento. ⚠️ DISPARA E-MAIL DE CONFIRMAÇÃO para o cliente!"
+      },
+      "response": []
+    },
+    {
+      "name": "4. Listar Agendamentos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/agendamentos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "agendamentos"
+          ]
+        },
+        "description": "Lista todos os agendamentos"
+      },
+      "response": []
+    },
+    {
+      "name": "5. Cancelar Agendamento (Dispara Email Cancelamento)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/agendamentos/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "agendamentos",
+            "1"
+          ]
+        },
+        "description": "Cancela um agendamento. ⚠️ DISPARA E-MAIL DE CANCELAMENTO para o cliente!"
+      },
+      "response": []
+    }
+  ]
+}
