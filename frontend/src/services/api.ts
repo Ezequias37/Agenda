@@ -21,6 +21,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401 || error.response?.status === 403) {
       localStorage.removeItem('token');
       localStorage.removeItem('usuario');
+      localStorage.setItem('sessaoExpirada', '1');
       window.location.href = '/login';
     }
     return Promise.reject(error);

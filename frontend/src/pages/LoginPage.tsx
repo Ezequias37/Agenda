@@ -1,4 +1,4 @@
-﻿import { useState, useCallback } from 'react';
+﻿import { useState, useCallback, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -12,6 +12,14 @@ export default function LoginPage() {
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [capsLock, setCapsLock] = useState(false);
   const [erros, setErros] = useState<{ email?: string }>({});
+  const [avisoSessao, setAvisoSessao] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem('sessaoExpirada')) {
+      setAvisoSessao(true);
+      localStorage.removeItem('sessaoExpirada');
+    }
+  }, []);
 
   const validarEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
@@ -66,6 +74,12 @@ export default function LoginPage() {
 
         <div style={{ background:'#fff', borderRadius:20, padding:'1.75rem 1.5rem', boxShadow:'0 20px 60px rgba(0,0,0,0.35)' }}>
           <h2 style={{ color:'#7c3f0a', fontWeight:700, fontSize:'1.1rem', textAlign:'center', marginBottom:'1.25rem', marginTop:0 }}>Entre na sua conta</h2>
+
+          {avisoSessao && (
+            <div style={{ background:'#fffbeb', borderLeft:'4px solid #f59e0b', padding:'0.75rem', borderRadius:6, color:'#92400e', fontSize:'0.875rem', marginBottom:'1rem' }}>
+              ⚠️ Sua sessão expirou. Por favor, faça login novamente.
+            </div>
+          )}
 
           {erro && <div style={{ background:'#fff5f5', borderLeft:'4px solid #e53e3e', padding:'0.75rem', borderRadius:6, color:'#c53030', fontSize:'0.875rem', marginBottom:'1rem' }}>{erro}</div>}
 
