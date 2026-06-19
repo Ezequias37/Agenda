@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import type { CreateAgendamentoDTO, Cliente } from '../types';
+import type { CreateAgendamentoDTO, Cliente, Procedimento, PROCEDIMENTOS as ProcedimentosType } from '../types';
+import { PROCEDIMENTOS } from '../types';
+import { ProcedimentoSelect } from './ProcedimentoSelect';
 import { ErrorMessage } from './ErrorMessage';
 
 interface AgendamentoFormProps {
@@ -11,13 +13,13 @@ interface AgendamentoFormProps {
 export function AgendamentoForm({ clientes, onSubmit, onSuccess }: AgendamentoFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedProcedimento, setSelectedProcedimento] = useState<Procedimento | null>(null);
   const [formData, setFormData] = useState({
     clienteId: '',
     dataHora: '',
-    descricao: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -25,16 +27,23 @@ export function AgendamentoForm({ clientes, onSubmit, onSuccess }: AgendamentoFo
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!selectedProcedimento) {
+      setError('Selecione um procedimento');
+      return;
+    }
+
     setLoading(true);
 
     try {
       await onSubmit({
         cliente: { id: parseInt(formData.clienteId) },
         dataHora: formData.dataHora,
-        descricao: formData.descricao,
+        procedimento: selectedProcedimento,
         status: 'AGENDADO',
       });
-      setFormData({ clienteId: '', dataHora: '', descricao: '' });
+      setFormData({ clienteId: '', dataHora: '' });
+      setSelectedProcedimento(null);
       onSuccess?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao criar agendamento');
@@ -77,21 +86,33 @@ export function AgendamentoForm({ clientes, onSubmit, onSuccess }: AgendamentoFo
         />
       </div>
 
-      <div className="form-group">
-        <label htmlFor="descricao">📝 Descrição/Tipo de Bronzeamento</label>
-        <textarea
-          id="descricao"
-          name="descricao"
-          value={formData.descricao}
-          onChange={handleChange}
-          placeholder="Ex: Bronzeamento tradicional 20 minutos"
-          required
-        />
-      </div>
+      <ProcedimentoSelect
+        procedimentos={PROCEDIMENTOS}
+        selected={selectedProcedimento}
+        onChange={setSelectedProcedimento}
+      />
 
-      <button type="submit" className="btn btn-primary" disabled={loading}>
-        {loading ? '⏳ Agendando...' : '☀️ Agendar Sessão'}
+      {selectedProcedimento && (
+        <div style={{
+          background: 'rgba(212, 165, 116, 0.1)',
+          border: '2px solid var(--primary)',
+          padding: '1rem',
+          borderRadius: '8px',
+          marginBottom: '1.5rem',
+        }}>
+          <div style={{ fontWeight: 'bold', color: 'var(--primary-dark)', marginBottom: '0.5rem' }}>
+            💰 Total: R$ {selectedProcedimento.preco.toFixed(2)}
+          </div>
+          <div style={{ fontSize: '0.9rem', color: '#666' }}>
+            ⏱️ Duração: {selectedProcedimento.duracao}
+          </div>
+        </div>
+      )}
+
+      <button type="submit" className="btn btn-primary" disabled={loading || !selectedProcedimento}>
+        {loading ? '⏳ Agendando...' : '☀️ Confirmar Agendamento'}
       </button>
     </form>
   );
 }
+

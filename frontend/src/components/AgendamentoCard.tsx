@@ -33,8 +33,15 @@ export function AgendamentoCard({ agendamento, onCancel }: AgendamentoCardProps)
           {agendamento.status}
         </span>
       </div>
-      <p style={{ marginBottom: '0.5rem' }}>📝 {agendamento.descricao}</p>
-      <p style={{ marginBottom: '1rem', color: '#999', fontSize: '0.9rem' }}>🕐 {data}</p>
+      <p style={{ marginBottom: '0.5rem', fontWeight: '600', color: 'var(--primary)' }}>
+        🌞 {agendamento.procedimento.nome}
+      </p>
+      <p style={{ marginBottom: '0.5rem', color: '#666' }}>
+        💰 R$ {agendamento.procedimento.preco.toFixed(2)}
+      </p>
+      <p style={{ marginBottom: '1rem', color: '#999', fontSize: '0.9rem' }}>
+        🕐 {data} | ⏱️ {agendamento.procedimento.duracao}
+      </p>
       {agendamento.status === 'AGENDADO' && (
         <div className="item-card-actions">
           <button onClick={handleCancel} className="btn btn-danger btn-sm">
@@ -45,3 +52,4 @@ export function AgendamentoCard({ agendamento, onCancel }: AgendamentoCardProps)
     </div>
   );
 }
+

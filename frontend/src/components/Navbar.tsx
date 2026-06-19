@@ -17,8 +17,12 @@ export function Navbar() {
           <li>
             <Link to="/agendamentos">Agendamentos</Link>
           </li>
+          <li>
+            <Link to="/informacoes">Informações</Link>
+          </li>
         </ul>
       </div>
     </nav>
   );
 }
+
