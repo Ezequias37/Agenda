@@ -20,7 +20,7 @@ export function AgendamentoCard({ agendamento, onCancel }: AgendamentoCardProps)
 
   return (
     <div className="item-card" style={{ borderTopColor: agendamento.status === 'AGENDADO' ? 'var(--success)' : 'var(--danger)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
         <h3>☀️ {agendamento.cliente.nome}</h3>
         <span style={{
           backgroundColor: agendamento.status === 'AGENDADO' ? 'var(--success)' : 'var(--danger)',

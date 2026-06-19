@@ -20,7 +20,7 @@ export function AgendamentosPage() {
   return (
     <main>
       <div className="container">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h1 className="page-title">☀️ Agendamentos de Sessões</h1>
             <p className="page-subtitle">Marque e gerencie as sessões de bronzeamento</p>
@@ -29,7 +29,7 @@ export function AgendamentosPage() {
             onClick={() => setIsModalOpen(true)}
             disabled={clientes.length === 0}
             className="btn btn-primary"
-            style={{ height: 'fit-content', opacity: clientes.length === 0 ? 0.5 : 1, cursor: clientes.length === 0 ? 'not-allowed' : 'pointer' }}
+            style={{ flexShrink: 0, opacity: clientes.length === 0 ? 0.5 : 1, cursor: clientes.length === 0 ? 'not-allowed' : 'pointer' }}
           >
             ➕ Nova Sessão
           </button>

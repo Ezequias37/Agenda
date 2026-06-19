@@ -37,6 +37,10 @@ public class Agendamento {
 
     private String descricao;
 
+    @ManyToOne
+    @JoinColumn(name = "procedimento_id")
+    private Procedimento procedimento;
+
     @Enumerated(EnumType.STRING)
     private StatusAgendamento status = StatusAgendamento.AGENDADO;
 }

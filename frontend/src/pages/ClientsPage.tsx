@@ -15,7 +15,7 @@ export function ClientsPage() {
   return (
     <main>
       <div className="container">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h1 className="page-title">👥 Gerenciar Clientes</h1>
             <p className="page-subtitle">Adicione e gerencie os dados dos seus clientes</p>
@@ -23,7 +23,7 @@ export function ClientsPage() {
           <button
             onClick={() => setIsModalOpen(true)}
             className="btn btn-primary"
-            style={{ height: 'fit-content' }}
+            style={{ flexShrink: 0 }}
           >
             ➕ Novo Cliente
           </button>

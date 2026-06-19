@@ -1,23 +1,25 @@
 import { useState } from 'react';
-import type { CreateAgendamentoDTO, Cliente, Procedimento, PROCEDIMENTOS as ProcedimentosType } from '../types';
+import type { Cliente, Procedimento } from '../types';
 import { PROCEDIMENTOS } from '../types';
 import { ProcedimentoSelect } from './ProcedimentoSelect';
 import { ErrorMessage } from './ErrorMessage';
+import { agendamentoService } from '../services/agendamentoService';
 
 interface AgendamentoFormProps {
-  clientes: Cliente[];
-  onSubmit: (data: CreateAgendamentoDTO) => Promise<void>;
+  // Modo admin: passa lista de clientes
+  clientes?: Cliente[];
+  // Modo cliente: passa o ID fixo
+  clienteFixo?: number;
+  // Callbacks legados (modo admin com onSubmit externo)
+  onSubmit?: (data: any) => Promise<void>;
   onSuccess?: () => void;
 }
 
-export function AgendamentoForm({ clientes, onSubmit, onSuccess }: AgendamentoFormProps) {
+export function AgendamentoForm({ clientes, clienteFixo, onSubmit, onSuccess }: AgendamentoFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedProcedimento, setSelectedProcedimento] = useState<Procedimento | null>(null);
-  const [formData, setFormData] = useState({
-    clienteId: '',
-    dataHora: '',
-  });
+  const [formData, setFormData] = useState({ clienteId: '', dataHora: '' });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -33,15 +35,29 @@ export function AgendamentoForm({ clientes, onSubmit, onSuccess }: AgendamentoFo
       return;
     }
 
-    setLoading(true);
+    // Modo admin: clientes prop presente → clienteId obrigatório no form
+    // Modo cliente: backend usa o JWT para inferir o cliente automaticamente
+    const clienteId = (clienteFixo != null && clienteFixo > 0) ? clienteFixo : parseInt(formData.clienteId);
+    if (clientes != null && (!clienteId || isNaN(clienteId))) {
+      setError('Selecione um cliente');
+      return;
+    }
 
+    setLoading(true);
     try {
-      await onSubmit({
-        cliente: { id: parseInt(formData.clienteId) },
+      const data: Record<string, unknown> = {
+        ...(clienteId && !isNaN(clienteId) ? { cliente: { id: clienteId } } : {}),
         dataHora: formData.dataHora,
-        procedimento: selectedProcedimento,
+        procedimento: { id: selectedProcedimento.id },
         status: 'AGENDADO',
-      });
+      };
+
+      if (onSubmit) {
+        await onSubmit(data);
+      } else {
+        await agendamentoService.createAgendamento(data as any);
+      }
+
       setFormData({ clienteId: '', dataHora: '' });
       setSelectedProcedimento(null);
       onSuccess?.();
@@ -56,23 +72,25 @@ export function AgendamentoForm({ clientes, onSubmit, onSuccess }: AgendamentoFo
     <form onSubmit={handleSubmit}>
       {error && <ErrorMessage message={error} />}
 
-      <div className="form-group">
-        <label htmlFor="clienteId">👤 Selecione o Cliente</label>
-        <select
-          id="clienteId"
-          name="clienteId"
-          value={formData.clienteId}
-          onChange={handleChange}
-          required
-        >
-          <option value="">-- Escolha um cliente --</option>
-          {clientes.map(cliente => (
-            <option key={cliente.id} value={cliente.id}>
-              {cliente.nome}
-            </option>
-          ))}
-        </select>
-      </div>
+      {!clienteFixo && clientes && (
+        <div className="form-group">
+          <label htmlFor="clienteId">👤 Selecione o Cliente</label>
+          <select
+            id="clienteId"
+            name="clienteId"
+            value={formData.clienteId}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- Escolha um cliente --</option>
+            {clientes.map(cliente => (
+              <option key={cliente.id} value={cliente.id}>
+                {cliente.nome}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="form-group">
         <label htmlFor="dataHora">📅 Data e Hora da Sessão</label>
@@ -115,4 +133,3 @@ export function AgendamentoForm({ clientes, onSubmit, onSuccess }: AgendamentoFo
     </form>
   );
 }
-
