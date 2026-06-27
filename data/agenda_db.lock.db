@@ -1,6 +1,6 @@
 #FileLock
-#Fri Jun 19 13:57:36 BRT 2026
-hostName=192.168.0.12
-id=19ee0d108fcc24a0efb255705157fbbbbc2f4a3c5d8
+#Thu Jun 25 22:59:52 BRT 2026
+hostName=ip-192-168-0-7.ec2.internal
+id=19f01a77e7530b3aeab9ee10f590e8b2de4a501dffc
 method=file
-server=192.168.0.12\:61821
+server=192.168.0.7\:59538

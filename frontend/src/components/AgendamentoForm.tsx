@@ -1,72 +1,77 @@
-import { useState } from 'react';
-import type { Cliente, Procedimento } from '../types';
+import { useState, useEffect } from 'react';
+import type { Cliente, Procedimento, SlotDTO } from '../types';
 import { PROCEDIMENTOS } from '../types';
 import { ProcedimentoSelect } from './ProcedimentoSelect';
 import { ErrorMessage } from './ErrorMessage';
 import { agendamentoService } from '../services/agendamentoService';
 
 interface AgendamentoFormProps {
-  // Modo admin: passa lista de clientes
   clientes?: Cliente[];
-  // Modo cliente: passa o ID fixo
   clienteFixo?: number;
-  // Callbacks legados (modo admin com onSubmit externo)
   onSubmit?: (data: any) => Promise<void>;
-  onSuccess?: () => void;
+  onSuccess?: (dataHoraAgendada?: string) => void;
 }
 
 export function AgendamentoForm({ clientes, clienteFixo, onSubmit, onSuccess }: AgendamentoFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedProcedimento, setSelectedProcedimento] = useState<Procedimento | null>(null);
-  const [formData, setFormData] = useState({ clienteId: '', dataHora: '' });
+  const [clienteId, setClienteId] = useState('');
+  const [dataSelecionada, setDataSelecionada] = useState('');
+  const [slots, setSlots] = useState<SlotDTO[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [slotSelecionado, setSlotSelecionado] = useState<SlotDTO | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  useEffect(() => {
+    if (!dataSelecionada || !selectedProcedimento) {
+      setSlots([]);
+      setSlotSelecionado(null);
+      return;
+    }
+    let ativo = true;
+    setLoadingSlots(true);
+    setSlotSelecionado(null);
+    agendamentoService.getHorariosDisponiveis(dataSelecionada, selectedProcedimento.id)
+      .then(data => { if (ativo) setSlots(data); })
+      .catch(() => { if (ativo) setSlots([]); })
+      .finally(() => { if (ativo) setLoadingSlots(false); });
+    return () => { ativo = false; };
+  }, [dataSelecionada, selectedProcedimento]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (!selectedProcedimento) {
-      setError('Selecione um procedimento');
-      return;
-    }
+    if (!selectedProcedimento) { setError('Selecione um procedimento'); return; }
+    if (!slotSelecionado) { setError('Selecione um horário disponível'); return; }
 
-    // Modo admin: clientes prop presente → clienteId obrigatório no form
-    // Modo cliente: backend usa o JWT para inferir o cliente automaticamente
-    const clienteId = (clienteFixo != null && clienteFixo > 0) ? clienteFixo : parseInt(formData.clienteId);
-    if (clientes != null && (!clienteId || isNaN(clienteId))) {
-      setError('Selecione um cliente');
-      return;
-    }
+    const cId = (clienteFixo != null && clienteFixo > 0) ? clienteFixo : parseInt(clienteId);
+    if (clientes != null && (!cId || isNaN(cId))) { setError('Selecione um cliente'); return; }
 
     setLoading(true);
     try {
       const data: Record<string, unknown> = {
-        ...(clienteId && !isNaN(clienteId) ? { cliente: { id: clienteId } } : {}),
-        dataHora: formData.dataHora,
+        ...(cId && !isNaN(cId) ? { cliente: { id: cId } } : {}),
+        dataHora: slotSelecionado.dataHora,
         procedimento: { id: selectedProcedimento.id },
         status: 'AGENDADO',
       };
-
-      if (onSubmit) {
-        await onSubmit(data);
-      } else {
-        await agendamentoService.createAgendamento(data as any);
-      }
-
-      setFormData({ clienteId: '', dataHora: '' });
+      if (onSubmit) { await onSubmit(data); }
+      else { await agendamentoService.createAgendamento(data as any); }
+      setClienteId('');
+      setDataSelecionada('');
       setSelectedProcedimento(null);
-      onSuccess?.();
+      setSlots([]);
+      setSlotSelecionado(null);
+      onSuccess?.(slotSelecionado.dataHora);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao criar agendamento');
     } finally {
       setLoading(false);
     }
   };
+
+  const hoje = new Date().toISOString().split('T')[0];
 
   return (
     <form onSubmit={handleSubmit}>
@@ -75,60 +80,69 @@ export function AgendamentoForm({ clientes, clienteFixo, onSubmit, onSuccess }: 
       {!clienteFixo && clientes && (
         <div className="form-group">
           <label htmlFor="clienteId">👤 Selecione o Cliente</label>
-          <select
-            id="clienteId"
-            name="clienteId"
-            value={formData.clienteId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">-- Escolha um cliente --</option>
-            {clientes.map(cliente => (
-              <option key={cliente.id} value={cliente.id}>
-                {cliente.nome}
-              </option>
-            ))}
+          <select id="clienteId" value={clienteId} onChange={e => setClienteId(e.target.value)} required>
+            <option value="">Selecione...</option>
+            {clientes.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
           </select>
         </div>
       )}
 
-      <div className="form-group">
-        <label htmlFor="dataHora">📅 Data e Hora da Sessão</label>
-        <input
-          id="dataHora"
-          type="datetime-local"
-          name="dataHora"
-          value={formData.dataHora}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
       <ProcedimentoSelect
         procedimentos={PROCEDIMENTOS}
         selected={selectedProcedimento}
-        onChange={setSelectedProcedimento}
+        onChange={proc => { setSelectedProcedimento(proc); setSlotSelecionado(null); setSlots([]); }}
       />
 
-      {selectedProcedimento && (
-        <div style={{
-          background: 'rgba(212, 165, 116, 0.1)',
-          border: '2px solid var(--primary)',
-          padding: '1rem',
-          borderRadius: '8px',
-          marginBottom: '1.5rem',
-        }}>
-          <div style={{ fontWeight: 'bold', color: 'var(--primary-dark)', marginBottom: '0.5rem' }}>
-            💰 Total: R$ {selectedProcedimento.preco.toFixed(2)}
-          </div>
-          <div style={{ fontSize: '0.9rem', color: '#666' }}>
-            ⏱️ Duração: {selectedProcedimento.duracao}
-          </div>
+      <div className="form-group">
+        <label htmlFor="dataSessao">📅 Data da Sessão</label>
+        <input
+          id="dataSessao" type="date" min={hoje} value={dataSelecionada} required
+          onChange={e => { setDataSelecionada(e.target.value); setSlotSelecionado(null); }}
+        />
+      </div>
+
+      {dataSelecionada && selectedProcedimento && (
+        <div className="form-group">
+          <label>🕐 Escolha o Horário</label>
+          {loadingSlots ? (
+            <p style={{ color: '#888', fontSize: '0.875rem', margin: '0.5rem 0' }}>Buscando horários disponíveis...</p>
+          ) : slots.length === 0 ? (
+            <p style={{ color: '#e53e3e', fontSize: '0.875rem', margin: '0.5rem 0' }}>Sem horários disponíveis nessa data.</p>
+          ) : (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
+              {slots.map(slot => {
+                const hora = slot.dataHora.substring(11, 16);
+                const sel = slotSelecionado?.dataHora === slot.dataHora;
+                return (
+                  <button key={slot.dataHora} type="button" disabled={!slot.disponivel}
+                    onClick={() => setSlotSelecionado(slot)}
+                    style={{
+                      padding: '0.45rem 0.9rem', borderRadius: 8, fontWeight: sel ? 700 : 400, fontSize: '0.9rem',
+                      border: `2px solid ${sel ? '#b45309' : slot.disponivel ? '#68d391' : '#e2e8f0'}`,
+                      background: sel ? '#b45309' : slot.disponivel ? '#f0fff4' : '#f7fafc',
+                      color: sel ? '#fff' : slot.disponivel ? '#276749' : '#a0aec0',
+                      cursor: slot.disponivel ? 'pointer' : 'not-allowed',
+                    }}
+                  >
+                    {hora}
+                    {slot.vagas > 1 && <span style={{ fontSize: '0.7rem', marginLeft: 4 }}>({slot.vagas} vagas)</span>}
+                    {!slot.disponivel && <span style={{ fontSize: '0.7rem', marginLeft: 4 }}>lotado</span>}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          {slotSelecionado && (
+            <p style={{ color: '#b45309', fontSize: '0.85rem', marginTop: '0.5rem', fontWeight: 600 }}>
+              ✅ {slotSelecionado.dataHora.substring(11, 16)} — prazo de cancelamento: até 1h antes
+            </p>
+          )}
         </div>
       )}
 
-      <button type="submit" className="btn btn-primary" disabled={loading || !selectedProcedimento}>
-        {loading ? '⏳ Agendando...' : '☀️ Confirmar Agendamento'}
+      <button type="submit" className="btn btn-primary"
+        disabled={loading || !selectedProcedimento || !slotSelecionado}>
+        {loading ? 'Aguarde...' : '✅ Confirmar Agendamento'}
       </button>
     </form>
   );

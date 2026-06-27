@@ -47,7 +47,7 @@ export function useAgendamentos(): UseAgendamentosReturn {
   const deleteAgendamento = async (id: number) => {
     try {
       setError(null);
-      await agendamentoService.deleteAgendamento(id);
+      await agendamentoService.cancelarAgendamento(id);
       await fetchAgendamentos();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao cancelar agendamento');

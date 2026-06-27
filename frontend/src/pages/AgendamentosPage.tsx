@@ -8,18 +8,43 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export function AgendamentosPage() {
   const { clientes, loading: clientesLoading } = useClientes();
-  const { agendamentos, loading: agendamentosLoading, createAgendamento, deleteAgendamento } = useAgendamentos();
+  const { agendamentos, loading: agendamentosLoading, error: agendamentosError, createAgendamento, deleteAgendamento } = useAgendamentos();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmacaoHora, setConfirmacaoHora] = useState<string | null>(null);
 
   if (clientesLoading) return <LoadingSpinner />;
 
-  const handleSuccess = () => {
+  const handleSuccess = (dataHora?: string) => {
     setIsModalOpen(false);
+    if (dataHora) setConfirmacaoHora(dataHora);
   };
 
   return (
     <main>
       <div className="container">
+        {confirmacaoHora && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+            <div style={{ background: '#fff', borderRadius: 16, padding: '2rem', maxWidth: 400, width: '100%', textAlign: 'center', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>✅</div>
+              <h2 style={{ color: '#15803d', fontWeight: 700, marginBottom: '0.5rem' }}>Sessão Agendada!</h2>
+              <div style={{ background: '#fef3c7', border: '1px solid #fcd34d', borderRadius: 10, padding: '0.75rem 1rem', margin: '1rem 0', color: '#92400e', fontSize: '0.9rem' }}>
+                ⚠️ <strong>Prazo de cancelamento:</strong><br />
+                até 1 hora antes do horário.<br />
+                <strong>{(() => {
+                  const d = new Date(confirmacaoHora);
+                  const limite = new Date(d.getTime() - 60 * 60 * 1000);
+                  return `Cancele até ${limite.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} de ${limite.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+                })()}</strong>
+              </div>
+              <button
+                onClick={() => setConfirmacaoHora(null)}
+                style={{ background: 'linear-gradient(135deg, #b45309, #78350f)', color: '#fff', fontWeight: 700, padding: '0.65rem 2rem', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: '0.9rem' }}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        )}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h1 className="page-title">☀️ Agendamentos de Sessões</h1>
@@ -51,7 +76,7 @@ export function AgendamentosPage() {
         <AgendamentoList
           agendamentos={agendamentos}
           loading={agendamentosLoading}
-          error={null}
+          error={agendamentosError}
           onCancel={deleteAgendamento}
         />
 

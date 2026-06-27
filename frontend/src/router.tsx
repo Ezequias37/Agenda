@@ -7,6 +7,7 @@ import { InformacoesPage } from './pages/InformacoesPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import MeusAgendamentosPage from './pages/client/MeusAgendamentosPage';
+import OAuth2CallbackPage from './pages/OAuth2CallbackPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomeRedirect from './components/HomeRedirect';
 
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
   {
     path: '/cadastro',
     element: <RegisterPage />,
+  },
+  {
+    path: '/oauth2/callback',
+    element: <OAuth2CallbackPage />,
   },
   {
     path: '/',

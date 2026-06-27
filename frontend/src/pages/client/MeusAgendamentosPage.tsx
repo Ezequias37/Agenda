@@ -24,6 +24,7 @@ export default function MeusAgendamentosPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modalAberto, setModalAberto] = useState(false);
+  const [confirmacaoHora, setConfirmacaoHora] = useState<string | null>(null);
 
   const fetchMeus = async () => {
     try { setLoading(true); setError(null); setAgendamentos(await agendamentoService.getMeusAgendamentos()); }
@@ -34,8 +35,16 @@ export default function MeusAgendamentosPage() {
   useEffect(() => { fetchMeus(); }, []);
 
   const handleCancelar = async (id: number) => {
+    const ag = agendamentos.find(a => a.id === id);
+    if (ag?.dataHora) {
+      const limite = new Date(new Date(ag.dataHora).getTime() - 60 * 60 * 1000);
+      if (new Date() >= limite) {
+        alert('Prazo de cancelamento expirado. Cancele com pelo menos 1 hora de antecedência.');
+        return;
+      }
+    }
     if (!confirm('Tem certeza que deseja cancelar este agendamento?')) return;
-    try { await agendamentoService.deleteAgendamento(id); await fetchMeus(); }
+    try { await agendamentoService.cancelarAgendamento(id); await fetchMeus(); }
     catch { alert('Erro ao cancelar agendamento'); }
   };
 
@@ -132,10 +141,35 @@ export default function MeusAgendamentosPage() {
         )}
       </div>
 
+      {confirmacaoHora && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+          <div style={{ background: '#fff', borderRadius: 16, padding: '2rem', maxWidth: 400, width: '100%', textAlign: 'center', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>✅</div>
+            <h2 style={{ color: '#15803d', fontWeight: 700, marginBottom: '0.5rem' }}>Sessão Agendada!</h2>
+            <p style={{ color: '#374151', marginBottom: '0.5rem' }}>Seu horário foi confirmado com sucesso.</p>
+            <div style={{ background: '#fef3c7', border: '1px solid #fcd34d', borderRadius: 10, padding: '0.75rem 1rem', margin: '1rem 0', color: '#92400e', fontSize: '0.9rem' }}>
+              ⚠️ <strong>Prazo de cancelamento:</strong><br />
+              até 1 hora antes do horário agendado.<br />
+              <strong>{(() => {
+                const d = new Date(confirmacaoHora);
+                const limite = new Date(d.getTime() - 60 * 60 * 1000);
+                return `Cancele até ${limite.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} de ${limite.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+              })()}</strong>
+            </div>
+            <button
+              onClick={() => setConfirmacaoHora(null)}
+              style={{ background: 'linear-gradient(135deg, #b45309, #78350f)', color: '#fff', fontWeight: 700, padding: '0.65rem 2rem', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: '0.9rem' }}
+            >
+              OK, entendido!
+            </button>
+          </div>
+        </div>
+      )}
+
       <Modal isOpen={modalAberto} title="Nova Sessão de Bronzeamento" onClose={() => setModalAberto(false)}>
         <AgendamentoForm
           clienteFixo={usuario?.clienteId}
-          onSuccess={async () => { setModalAberto(false); await fetchMeus(); }}
+          onSuccess={async (dataHora) => { setModalAberto(false); await fetchMeus(); if (dataHora) setConfirmacaoHora(dataHora); }}
         />
       </Modal>
     </div>
@@ -150,6 +184,9 @@ function CardAgendamento({
   formatarData: (d: string) => string;
 }) {
   const ativo = agendamento.status === 'AGENDADO';
+  const dentroDoLimite = agendamento.dataHora
+    ? new Date() >= new Date(new Date(agendamento.dataHora).getTime() - 60 * 60 * 1000)
+    : false;
   return (
     <div style={{ background: '#fff', borderRadius: 16, padding: '1.1rem 1.25rem', boxShadow: '0 2px 12px rgba(120,53,15,0.08)', border: `1px solid ${ativo ? '#fde68a' : '#f3f4f6'}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem' }}>
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -170,12 +207,16 @@ function CardAgendamento({
           {STATUS_LABEL[agendamento.status]}
         </span>
         {ativo && onCancelar && (
-          <button
-            onClick={() => onCancelar(agendamento.id)}
-            style={{ fontSize: '0.75rem', color: '#dc2626', background: 'none', border: '1px solid #fca5a5', borderRadius: 6, padding: '3px 10px', cursor: 'pointer' }}
-          >
-            Cancelar
-          </button>
+          dentroDoLimite ? (
+            <span style={{ fontSize: '0.7rem', color: '#e53e3e', fontWeight: 600, padding: '3px 8px', background: '#fee2e2', borderRadius: 6 }}>⏰ Prazo expirado</span>
+          ) : (
+            <button
+              onClick={() => onCancelar(agendamento.id)}
+              style={{ fontSize: '0.75rem', color: '#dc2626', background: 'none', border: '1px solid #fca5a5', borderRadius: 6, padding: '3px 10px', cursor: 'pointer' }}
+            >
+              Cancelar
+            </button>
+          )
         )}
       </div>
     </div>

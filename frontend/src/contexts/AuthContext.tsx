@@ -12,6 +12,7 @@ interface AuthContextType {
   usuario: UsuarioLogado | null;
   token: string | null;
   login: (email: string, senha: string) => Promise<void>;
+  loginWithToken: (token: string, role: string, nome: string, email: string, clienteId: number) => void;
   register: (nome: string, email: string, telefone: string, senha: string) => Promise<void>;
   logout: () => void;
 }
@@ -41,6 +42,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('usuario', JSON.stringify(u));
   };
 
+  const loginWithToken = (token: string, role: string, nome: string, email: string, clienteId: number) => {
+    setToken(token);
+    const u: UsuarioLogado = { nome, email, role: role as 'ADMIN' | 'CLIENTE', clienteId };
+    setUsuario(u);
+    localStorage.setItem('token', token);
+    localStorage.setItem('usuario', JSON.stringify(u));
+  };
+
   const register = async (nome: string, email: string, telefone: string, senha: string) => {
     const res = await api.post('/auth/register', { nome, email, telefone, senha });
     const data = res.data;
@@ -59,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ usuario, token, login, register, logout }}>
+    <AuthContext.Provider value={{ usuario, token, login, loginWithToken, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

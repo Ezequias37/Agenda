@@ -35,13 +35,28 @@ public class DataInitializer {
     }
 
     private void seedAdmin() {
-        if (!usuarioRepository.existsByRole(Role.ADMIN)) {
-            Usuario admin = new Usuario();
-            admin.setEmail("admin");
-            admin.setSenha(passwordEncoder.encode("Rdcdutra1!"));
-            admin.setRole(Role.ADMIN);
-            usuarioRepository.save(admin);
-        }
+        usuarioRepository.findAll().stream()
+            .filter(u -> u.getRole() == Role.ADMIN)
+            .findFirst()
+            .ifPresentOrElse(admin -> {
+                // Garante email e senha corretos mesmo se o DB foi criado com dados diferentes
+                boolean atualizar = false;
+                if (!"admin".equals(admin.getEmail())) {
+                    admin.setEmail("admin");
+                    atualizar = true;
+                }
+                if (!passwordEncoder.matches("Rdcdutra1!", admin.getSenha())) {
+                    admin.setSenha(passwordEncoder.encode("Rdcdutra1!"));
+                    atualizar = true;
+                }
+                if (atualizar) usuarioRepository.save(admin);
+            }, () -> {
+                Usuario admin = new Usuario();
+                admin.setEmail("admin");
+                admin.setSenha(passwordEncoder.encode("Rdcdutra1!"));
+                admin.setRole(Role.ADMIN);
+                usuarioRepository.save(admin);
+            });
     }
 
     private void seedProcedimentos() {

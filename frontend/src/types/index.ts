@@ -22,10 +22,17 @@ export interface Procedimento {
 
 export interface Agendamento {
   id: number;
-  cliente: Cliente;
+  cliente: Cliente | null;
   dataHora: string;
-  procedimento: Procedimento;
+  procedimento: Procedimento | null;
   status: 'AGENDADO' | 'CANCELADO' | 'CONCLUIDO';
+}
+
+export interface SlotDTO {
+  dataHora: string;
+  capacidade: number;
+  vagas: number;
+  disponivel: boolean;
 }
 
 export interface CreateAgendamentoDTO {
@@ -43,35 +50,35 @@ export interface ApiResponse<T> {
 
 export const PROCEDIMENTOS: Procedimento[] = [
   {
-    id: 'brz-artificial',
+    id: 'bronzeamento-maquina',
     nome: 'Bronzeamento Artificial (Máquina)',
     preco: 100,
     duracao: '1h30min',
-    descricao: 'Sessão de bronzeamento em câmara UV',
+    descricao: 'Bronzeamento com equipamento profissional de UV',
     categoria: 'bronzeamento',
   },
   {
-    id: 'brz-artificial-banho',
+    id: 'bronzeamento-maquina-banho-lua',
     nome: 'Bronzeamento Artificial + Banho de Lua',
     preco: 110,
     duracao: '1h30min',
-    descricao: 'Sessão de bronzeamento em câmara UV + Banho de Lua',
+    descricao: 'Bronzeamento com máquina + descoloração suave',
     categoria: 'bronzeamento',
   },
   {
-    id: 'brz-natural',
+    id: 'bronzeamento-natural',
     nome: 'Bronzeamento Natural (Sol)',
     preco: 80,
     duracao: '1h30min',
-    descricao: 'Sessão de bronzeamento ao ar livre',
+    descricao: 'Bronzeamento ao sol com acompanhamento profissional',
     categoria: 'bronzeamento',
   },
   {
-    id: 'brz-natural-banho',
+    id: 'bronzeamento-natural-banho-lua',
     nome: 'Bronzeamento Natural + Banho de Lua',
     preco: 90,
     duracao: '1h30min',
-    descricao: 'Sessão de bronzeamento ao ar livre + Banho de Lua',
+    descricao: 'Bronzeamento ao sol + descoloração suave',
     categoria: 'bronzeamento',
   },
   {
