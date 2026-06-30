@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.lmbronze.agenda.model.Agendamento;
 import com.lmbronze.agenda.model.Cliente;
@@ -29,6 +30,7 @@ class EmailServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(emailService, "fromEmail", "noreply@agenda.com");
     }
 
     @Test
@@ -51,15 +53,19 @@ class EmailServiceTest {
         SimpleMailMessage message = captor.getValue();
         assertEquals("noreply@agenda.com", message.getFrom());
         assertArrayEquals(new String[] {"joao@example.com"}, message.getTo());
-        assertEquals("Confirmação de Agendamento", message.getSubject());
+        assertEquals("☀️ Agendamento Confirmado – LM Bronzeamentos", message.getSubject());
         assertEquals(
             "Olá João,\n\n" +
-            "Seu agendamento foi confirmado!\n\n" +
-            "Detalhes:\n" +
-            "Data e Hora: 2026-05-20T14:30\n" +
-            "Descrição: Consulta de rotina\n" +
-            "Status: AGENDADO\n\n" +
-            "Obrigado!",
+            "Seu agendamento foi confirmado com sucesso!\n\n" +
+            "📋 Detalhes:\n" +
+            "   Serviço: Sessão de bronzeamento\n" +
+            "   Data e Hora: 2026-05-20 às 14:30\n\n" +
+            "⚠️  IMPORTANTE – Prazo de Cancelamento:\n" +
+            "   O cancelamento deve ser solicitado com pelo menos 1 hora de antecedência.\n" +
+            "   Após esse prazo o sistema não permite mais cancelamentos.\n\n" +
+            "Qualquer dúvida, entre em contato conosco.\n\n" +
+            "Até breve! ☀️\n" +
+            "Equipe LM Bronzeamentos",
             message.getText()
         );
     }
@@ -84,15 +90,17 @@ class EmailServiceTest {
         SimpleMailMessage message = captor.getValue();
         assertEquals("noreply@agenda.com", message.getFrom());
         assertArrayEquals(new String[] {"maria@example.com"}, message.getTo());
-        assertEquals("Cancelamento de Agendamento", message.getSubject());
+        assertEquals("❌ Agendamento Cancelado – LM Bronzeamentos", message.getSubject());
         assertEquals(
             "Olá Maria,\n\n" +
             "Seu agendamento foi cancelado.\n\n" +
-            "Detalhes:\n" +
-            "Data e Hora: 2026-05-22T09:00\n" +
-            "Descrição: Retirada de documento\n\n" +
-            "Obrigado!",
+            "📋 Detalhes do agendamento cancelado:\n" +
+            "   Serviço: Sessão de bronzeamento\n" +
+            "   Data e Hora: 2026-05-22 às 09:00\n\n" +
+            "Para reagendar, acesse nosso sistema e escolha um novo horário.\n\n" +
+            "Equipe LM Bronzeamentos",
             message.getText()
         );
     }
 }
+
