@@ -2,7 +2,6 @@
 import { useAuth } from '../../contexts/AuthContext';
 import { agendamentoService } from '../../services/agendamentoService';
 import { evolucaoService } from '../../services/evolucaoService';
-import { casoSucessoService } from '../../services/casoSucessoService';
 import type { Agendamento, EvolucaoCliente } from '../../types';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Modal } from '../../components/Modal';
