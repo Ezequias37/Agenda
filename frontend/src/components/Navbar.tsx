@@ -69,28 +69,28 @@ export function Navbar() {
   const linksAdmin = (
     <>
       <li>
-        <Link to="/admin" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📊 Dashboard</Link>
+        <Link to="/admin" onClick={fecharMenu} className="block py-2 px-2 text-white/85 hover:text-white transition rounded hover:bg-white/10">📊 Dashboard</Link>
       </li>
       <li>
-        <Link to="/admin/clientes" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">👥 Clientes</Link>
+        <Link to="/admin/clientes" onClick={fecharMenu} className="block py-2 px-2 text-white/85 hover:text-white transition rounded hover:bg-white/10">👥 Clientes</Link>
       </li>
       <li>
-        <Link to="/admin/agendamentos" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📅 Agendamentos</Link>
+        <Link to="/admin/agendamentos" onClick={fecharMenu} className="block py-2 px-2 text-white/85 hover:text-white transition rounded hover:bg-white/10">📅 Agendamentos</Link>
       </li>
       <li>
-        <Link to="/admin/configuracao" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">⚙️ Configurações</Link>
+        <Link to="/admin/configuracao" onClick={fecharMenu} className="block py-2 px-2 text-white/85 hover:text-white transition rounded hover:bg-white/10">⚙️ Configurações</Link>
       </li>
       <li>
-        <Link to="/admin/casos" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📸 Cases Pendentes</Link>
+        <Link to="/admin/casos" onClick={fecharMenu} className="block py-2 px-2 text-white/85 hover:text-white transition rounded hover:bg-white/10">📸 Cases</Link>
       </li>
       <li>
-        <Link to="/vitrine" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">🌟 Vitrine</Link>
+        <Link to="/vitrine" onClick={fecharMenu} className="block py-2 px-2 text-white/85 hover:text-white transition rounded hover:bg-white/10">🌟 Vitrine</Link>
       </li>
       <li>
-        <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📋 Informações</Link>
+        <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-2 text-white/85 hover:text-white transition rounded hover:bg-white/10">📋 Informações</Link>
       </li>
       <li>
-        <Link to="/alterar-senha" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">🔒 Alterar Senha</Link>
+        <Link to="/alterar-senha" onClick={fecharMenu} className="block py-2 px-2 text-white/85 hover:text-white transition rounded hover:bg-white/10">🔒 Senha</Link>
       </li>
       <li>
         <button onClick={handleLogout} className="nav-logout-btn block w-full text-left py-2 px-3 text-white transition">
@@ -104,9 +104,9 @@ export function Navbar() {
 
   return (
     <nav style={{ background: 'linear-gradient(135deg, var(--ca-primary) 0%, var(--ca-primary-light) 100%)' }} className="shadow-md sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 py-4 md:py-5 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 py-4 md:py-5 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3" onClick={fecharMenu}>
+        <Link to="/" className="flex items-center gap-3 flex-shrink-0" onClick={fecharMenu}>
           <img
             src={logoExibicao}
             alt={nomeExibicao}
@@ -118,7 +118,7 @@ export function Navbar() {
         </Link>
 
         {/* Menu desktop */}
-        <ul className="hidden md:flex items-center gap-1 text-lg">
+        <ul className="hidden md:flex items-center gap-2 text-base">
           {links}
         </ul>
 
