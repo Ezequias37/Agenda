@@ -19,10 +19,10 @@ const STATUS_LABEL: Record<string, string> = {
   CONCLUIDO: 'Concluido',
 };
 
-const STATUS_STYLE: Record<string, React.CSSProperties> = {
-  AGENDADO:  { background: '#dcfce7', color: '#15803d', border: '1px solid #86efac' },
-  CANCELADO: { background: '#fee2e2', color: '#b91c1c', border: '1px solid #fca5a5' },
-  CONCLUIDO: { background: '#dbeafe', color: '#1d4ed8', border: '1px solid #93c5fd' },
+const STATUS_CLASSE: Record<string, string> = {
+  AGENDADO: 'status-agendado',
+  CANCELADO: 'status-cancelado',
+  CONCLUIDO: 'status-concluido',
 };
 
 export default function MeusAgendamentosPage() {
@@ -35,6 +35,7 @@ export default function MeusAgendamentosPage() {
   const [evolucoes, setEvolucoes] = useState<EvolucaoCliente[]>([]);
   const [evolucoesLoading, setEvolucoesLoading] = useState(true);
   const [agendamentoEvolucaoId, setAgendamentoEvolucaoId] = useState<number | null>(null);
+  const [escolhaEvolucaoAberta, setEscolhaEvolucaoAberta] = useState(false);
   const [agendamentoCasoId, setAgendamentoCasoId] = useState<number | null>(null);
   const [casoEnviado, setCasoEnviado] = useState(false);
 
@@ -165,9 +166,24 @@ export default function MeusAgendamentosPage() {
 
             {/* Evolução */}
             <section style={{ marginTop: '1.5rem' }}>
-              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--ca-primary)', margin: '0 0 0.75rem', display: 'flex', alignItems: 'center', gap: 6 }}>
-                📸 Minha Evolução
-              </h2>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+                <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--ca-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  📸 Minha Evolução
+                </h2>
+                <button
+                  onClick={() => {
+                    const concluidos = agendamentos.filter(a => a.status === 'CONCLUIDO');
+                    if (concluidos.length === 0) {
+                      alert('Você ainda não tem nenhuma sessão concluída. Assim que concluir uma sessão, você poderá adicionar fotos aqui.');
+                      return;
+                    }
+                    setEscolhaEvolucaoAberta(true);
+                  }}
+                  className="btn btn-primary btn-sm"
+                >
+                  ➕ Adicionar Foto
+                </button>
+              </div>
               <EvolucaoTimeline evolucoes={evolucoes} loading={evolucoesLoading} />
             </section>
           </>
@@ -218,6 +234,28 @@ export default function MeusAgendamentosPage() {
             onSuccess={async () => { setAgendamentoEvolucaoId(null); await fetchEvolucoes(); }}
           />
         )}
+      </Modal>
+
+      <Modal
+        isOpen={escolhaEvolucaoAberta}
+        title="📸 Escolha a sessão"
+        onClose={() => setEscolhaEvolucaoAberta(false)}
+      >
+        <p style={{ color: '#666', marginBottom: '1rem', fontSize: '0.9rem' }}>
+          Selecione a sessão concluída à qual esta foto pertence:
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {agendamentos.filter(a => a.status === 'CONCLUIDO').map(a => (
+            <button
+              key={a.id}
+              onClick={() => { setEscolhaEvolucaoAberta(false); setAgendamentoEvolucaoId(a.id); }}
+              className="btn btn-secondary"
+              style={{ justifyContent: 'flex-start', textAlign: 'left' }}
+            >
+              📅 {a.procedimento?.nome ?? 'Sessão'} — {formatarData(a.dataHora)}
+            </button>
+          ))}
+        </div>
       </Modal>
 
       <Modal
@@ -274,7 +312,7 @@ function CardAgendamento({
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
-        <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: 20, ...STATUS_STYLE[agendamento.status] }}>
+        <span className={`status-badge ${STATUS_CLASSE[agendamento.status] ?? ''}`}>
           {STATUS_LABEL[agendamento.status]}
         </span>
         {ativo && onCancelar && (

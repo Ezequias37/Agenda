@@ -46,6 +46,14 @@ public class Empresa {
     @Column(nullable = false)
     private String corSecundaria = "#1a1a2e";
 
+    /** Itens que o cliente deve levar para a sessão, um por linha. */
+    @Column(columnDefinition = "TEXT")
+    private String oQueLevar;
+
+    /** Recomendações para os clientes, uma por linha. */
+    @Column(columnDefinition = "TEXT")
+    private String recomendacoes;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -59,5 +67,7 @@ public class Empresa {
         this.nomeFantasia = SanitizadorUtil.limpar(nomeFantasia);
         this.razaoSocial = SanitizadorUtil.limpar(razaoSocial);
         this.endereco = SanitizadorUtil.limpar(endereco);
+        this.oQueLevar = SanitizadorUtil.limpar(oQueLevar);
+        this.recomendacoes = SanitizadorUtil.limpar(recomendacoes);
     }
 }

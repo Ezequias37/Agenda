@@ -34,19 +34,19 @@ export function Dashboard() {
 
         <div className="dashboard-grid">
           <div className="card">
-            <div className="card-title">👥 Total de Clientes</div>
+            <div className="card-title"><span className="card-icon">👥</span> Total de Clientes</div>
             <div className="card-number" style={{ color: 'var(--primary)' }}>{clientes.length}</div>
             <div className="card-description">Clientes cadastrados no sistema</div>
           </div>
 
           <div className="card">
-            <div className="card-title">📅 Agendamentos Ativos</div>
+            <div className="card-title"><span className="card-icon">📅</span> Agendamentos Ativos</div>
             <div className="card-number" style={{ color: 'var(--success)' }}>{agendamentosAtivos.length}</div>
             <div className="card-description">Sessões agendadas</div>
           </div>
 
           <div className="card">
-            <div className="card-title">✅ Sessões Concluídas</div>
+            <div className="card-title"><span className="card-icon">✅</span> Sessões Concluídas</div>
             <div className="card-number" style={{ color: 'var(--accent)' }}>
               {agendamentos.filter(a => a.status === 'CONCLUIDO').length}
             </div>
@@ -54,7 +54,7 @@ export function Dashboard() {
           </div>
 
           <div className="card">
-            <div className="card-title">💰 Faturamento Hoje</div>
+            <div className="card-title"><span className="card-icon">💰</span> Faturamento Hoje</div>
             <div className="card-number" style={{ color: 'var(--ca-secondary)' }}>
               R$ {(resumo?.faturamentoHoje ?? 0).toFixed(2)}
             </div>
@@ -62,7 +62,7 @@ export function Dashboard() {
           </div>
 
           <div className="card">
-            <div className="card-title">💵 Faturamento no Mês</div>
+            <div className="card-title"><span className="card-icon">💵</span> Faturamento no Mês</div>
             <div className="card-number" style={{ color: 'var(--ca-secondary)' }}>
               R$ {(resumo?.faturamentoMes ?? 0).toFixed(2)}
             </div>

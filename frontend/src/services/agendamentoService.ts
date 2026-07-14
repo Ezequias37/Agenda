@@ -22,6 +22,11 @@ export const agendamentoService = {
     return response.data;
   },
 
+  async concluirAgendamento(id: number): Promise<Agendamento> {
+    const response = await api.patch<Agendamento>(`/api/agendamentos/${id}/concluir`);
+    return response.data;
+  },
+
   async deleteAgendamento(id: number): Promise<void> {
     await api.delete(`/api/agendamentos/${id}`);
   },

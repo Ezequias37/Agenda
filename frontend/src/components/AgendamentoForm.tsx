@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import type { Agendamento, Cliente, Procedimento, SlotDTO } from '../types';
-import { PROCEDIMENTOS } from '../types';
 import { ProcedimentoSelect } from './ProcedimentoSelect';
 import { ErrorMessage } from './ErrorMessage';
 import { agendamentoService } from '../services/agendamentoService';
+import { procedimentoService } from '../services/procedimentoService';
 
 interface AgendamentoFormProps {
   clientes?: Cliente[];
@@ -21,6 +21,17 @@ export function AgendamentoForm({ clientes, clienteFixo, onSubmit, onSuccess }: 
   const [slots, setSlots] = useState<SlotDTO[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [slotSelecionado, setSlotSelecionado] = useState<SlotDTO | null>(null);
+  const [procedimentos, setProcedimentos] = useState<Procedimento[]>([]);
+  const [loadingProcedimentos, setLoadingProcedimentos] = useState(true);
+
+  useEffect(() => {
+    let ativo = true;
+    procedimentoService.listar()
+      .then(data => { if (ativo) setProcedimentos(data); })
+      .catch(() => { if (ativo) setProcedimentos([]); })
+      .finally(() => { if (ativo) setLoadingProcedimentos(false); });
+    return () => { ativo = false; };
+  }, []);
 
   useEffect(() => {
     if (!dataSelecionada || !selectedProcedimento) {
@@ -88,11 +99,15 @@ export function AgendamentoForm({ clientes, clienteFixo, onSubmit, onSuccess }: 
         </div>
       )}
 
-      <ProcedimentoSelect
-        procedimentos={PROCEDIMENTOS}
-        selected={selectedProcedimento}
-        onChange={proc => { setSelectedProcedimento(proc); setSlotSelecionado(null); setSlots([]); }}
-      />
+      {loadingProcedimentos ? (
+        <p style={{ color: '#888', fontSize: '0.875rem', margin: '0.5rem 0' }}>Carregando procedimentos...</p>
+      ) : (
+        <ProcedimentoSelect
+          procedimentos={procedimentos}
+          selected={selectedProcedimento}
+          onChange={proc => { setSelectedProcedimento(proc); setSlotSelecionado(null); setSlots([]); }}
+        />
+      )}
 
       <div className="form-group">
         <label htmlFor="dataSessao">📅 Data da Sessão</label>

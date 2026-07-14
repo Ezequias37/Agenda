@@ -2,7 +2,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { Footer } from '../components/Footer';
 
 interface Erros {
   nome?: string;
@@ -222,7 +221,9 @@ export default function RegisterPage() {
         </div>
       </div>
       </div>
-      <Footer />
+      <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.65)', fontSize: '0.78rem', padding: '0.75rem 1rem 1rem' }}>
+        © 2026 CLICKAGENDA — Tecnologia CLICKAGENDA
+      </p>
     </div>
   );
 }

@@ -1,100 +1,0 @@
-[INFO] Scanning for projects...
-Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/maven-metadata.xml
-Downloading from central: https://repo.maven.apache.org/maven2/org/cyclonedx/maven-metadata.xml
-Downloading from central: https://repo.maven.apache.org/maven2/io/github/git-commit-id/maven-metadata.xml
-Downloading from central: https://repo.maven.apache.org/maven2/org/flywaydb/maven-metadata.xml
-Progress (1): 243 BProgress (2): 243 B | 249 BProgress (3): 243 B | 249 B | 255 BProgress (4): 243 B | 249 B | 255 B | 234 B                                           Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/maven-metadata.xml (249 B at 209 B/s)
-Downloaded from central: https://repo.maven.apache.org/maven2/org/cyclonedx/maven-metadata.xml (243 B at 204 B/s)
-Downloading from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/maven-metadata.xml
-Downloading from central: https://repo.maven.apache.org/maven2/org/jooq/maven-metadata.xml
-Downloaded from central: https://repo.maven.apache.org/maven2/org/flywaydb/maven-metadata.xml (234 B at 192 B/s)
-Downloaded from central: https://repo.maven.apache.org/maven2/io/github/git-commit-id/maven-metadata.xml (255 B at 209 B/s)
-Downloading from central: https://repo.maven.apache.org/maven2/org/graalvm/buildtools/maven-metadata.xml
-Downloading from central: https://repo.maven.apache.org/maven2/org/liquibase/maven-metadata.xml
-Progress (1): 398 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/jooq/maven-metadata.xml (398 B at 6.4 kB/s)
-Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
-Progress (1): 394 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/liquibase/maven-metadata.xml (394 B at 8.2 kB/s)
-Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
-Progress (1): 242 BProgress (2): 242 B | 375 B                           Downloaded from central: https://repo.maven.apache.org/maven2/org/graalvm/buildtools/maven-metadata.xml (242 B at 3.7 kB/s)
-Downloaded from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/maven-metadata.xml (375 B at 3.9 kB/s)
-Progress (1): 4.6 kBProgress (1): 9.7 kBProgress (1): 14 kB Progress (2): 14 kB | 3.1 kBProgress (2): 14 kB | 7.7 kB                            Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 260 kB/s)
-Progress (1): 12 kBProgress (1): 17 kBProgress (1): 20 kBProgress (1): 21 kB                   Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (21 kB at 213 kB/s)
-[INFO] 
-[INFO] ------------------------< com.lmbronze:agenda >-------------------------
-[INFO] Building  0.0.1-SNAPSHOT
-[INFO]   from pom.xml
-[INFO] --------------------------------[ jar ]---------------------------------
-[INFO] 
-[INFO] >>> spring-boot:4.0.6:run (default-cli) > test-compile @ agenda >>>
-[INFO] 
-[INFO] --- resources:3.3.1:resources (default-resources) @ agenda ---
-[INFO] Copying 1 resource from src\main\resources to target\classes
-[INFO] Copying 0 resource from src\main\resources to target\classes
-[INFO] 
-[INFO] --- compiler:3.14.1:compile (default-compile) @ agenda ---
-[INFO] Nothing to compile - all classes are up to date.
-[INFO] 
-[INFO] --- resources:3.3.1:testResources (default-testResources) @ agenda ---
-[INFO] skip non existing resourceDirectory C:\Users\W3ERP - Ezequias\Desktop\LMBRONZE\agenda\src\test\resources
-[INFO] 
-[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ agenda ---
-[INFO] Nothing to compile - all classes are up to date.
-[INFO] 
-[INFO] <<< spring-boot:4.0.6:run (default-cli) < test-compile @ agenda <<<
-[INFO] 
-[INFO] 
-[INFO] --- spring-boot:4.0.6:run (default-cli) @ agenda ---
-[INFO] Attaching agents: []
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::                (v4.0.6)
-
-2026-06-23T08:30:20.538-03:00  INFO 13608 --- [agenda] [  restartedMain] com.lmbronze.agenda.AgendaApplication    : Starting AgendaApplication using Java 21.0.11 with PID 13608 (C:\Users\W3ERP - Ezequias\Desktop\LMBRONZE\agenda\target\classes started by W3ERP - Ezequias in C:\Users\W3ERP - Ezequias\Desktop\LMBRONZE\agenda)
-2026-06-23T08:30:20.544-03:00  INFO 13608 --- [agenda] [  restartedMain] com.lmbronze.agenda.AgendaApplication    : No active profile set, falling back to 1 default profile: "default"
-2026-06-23T08:30:20.699-03:00  INFO 13608 --- [agenda] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-06-23T08:30:20.699-03:00  INFO 13608 --- [agenda] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-06-23T08:30:22.182-03:00  INFO 13608 --- [agenda] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-06-23T08:30:22.299-03:00  INFO 13608 --- [agenda] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 86 ms. Found 4 JPA repository interfaces.
-2026-06-23T08:30:23.507-03:00  INFO 13608 --- [agenda] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-06-23T08:30:23.538-03:00  INFO 13608 --- [agenda] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-06-23T08:30:23.539-03:00  INFO 13608 --- [agenda] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
-2026-06-23T08:30:23.674-03:00  INFO 13608 --- [agenda] [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2973 ms
-2026-06-23T08:30:23.919-03:00  INFO 13608 --- [agenda] [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-06-23T08:30:24.031-03:00  INFO 13608 --- [agenda] [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
-2026-06-23T08:30:24.897-03:00  INFO 13608 --- [agenda] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-06-23T08:30:24.963-03:00  INFO 13608 --- [agenda] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-06-23T08:30:29.490-03:00  INFO 13608 --- [agenda] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn1: url=jdbc:h2:file:./data/agenda_db user=SA
-2026-06-23T08:30:29.493-03:00  INFO 13608 --- [agenda] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-06-23T08:30:29.528-03:00  WARN 13608 --- [agenda] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-06-23T08:30:29.578-03:00  INFO 13608 --- [agenda] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [jdbc:h2:file:./data/agenda_db]
-	Database driver: H2 JDBC Driver
-	Database dialect: H2Dialect
-	Database version: 2.4.240
-	Default catalog/schema: AGENDA_DB/PUBLIC
-	Autocommit mode: undefined/unknown
-	Isolation level: READ_COMMITTED [default READ_COMMITTED]
-	JDBC fetch size: 100
-	Pool: DataSourceConnectionProvider
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-2026-06-23T08:30:32.011-03:00  INFO 13608 --- [agenda] [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-06-23T08:30:32.155-03:00  INFO 13608 --- [agenda] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-06-23T08:30:32.365-03:00  INFO 13608 --- [agenda] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-06-23T08:30:34.493-03:00  WARN 13608 --- [agenda] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-06-23T08:30:34.666-03:00  WARN 13608 --- [agenda] [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
-
-Using generated security password: 7fec8d27-51bc-4f36-b5d9-2c00c3ee2833
-
-This generated password is for development use only. Your security configuration must be updated before running your application in production.
-
-2026-06-23T08:30:34.683-03:00  INFO 13608 --- [agenda] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
-2026-06-23T08:30:35.624-03:00  INFO 13608 --- [agenda] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-06-23T08:30:35.631-03:00  INFO 13608 --- [agenda] [  restartedMain] com.lmbronze.agenda.AgendaApplication    : Started AgendaApplication in 15.854 seconds (process running for 16.851)
-^C

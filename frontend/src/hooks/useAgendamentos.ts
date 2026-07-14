@@ -8,6 +8,7 @@ interface UseAgendamentosReturn {
   error: string | null;
   createAgendamento: (data: CreateAgendamentoDTO) => Promise<Agendamento>;
   deleteAgendamento: (id: number) => Promise<void>;
+  concluirAgendamento: (id: number) => Promise<void>;
   refetch: () => Promise<void>;
 }
 
@@ -56,5 +57,16 @@ export function useAgendamentos(): UseAgendamentosReturn {
     }
   };
 
-  return { agendamentos, loading, error, createAgendamento, deleteAgendamento, refetch: fetchAgendamentos };
+  const concluirAgendamento = async (id: number) => {
+    try {
+      setError(null);
+      await agendamentoService.concluirAgendamento(id);
+      await fetchAgendamentos();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao concluir agendamento');
+      throw err;
+    }
+  };
+
+  return { agendamentos, loading, error, createAgendamento, deleteAgendamento, concluirAgendamento, refetch: fetchAgendamentos };
 }

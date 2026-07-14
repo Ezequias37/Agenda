@@ -1,8 +1,13 @@
 import api from './api';
-import type { Empresa } from '../types';
+import type { Empresa, EmpresaPublica } from '../types';
 
 export async function obterConfigEmpresa(): Promise<Empresa> {
   const res = await api.get('/api/empresa/config');
+  return res.data;
+}
+
+export async function obterEmpresaPublica(empresaId: number): Promise<EmpresaPublica> {
+  const res = await api.get('/api/empresa/publico', { params: { empresaId } });
   return res.data;
 }
 
@@ -14,6 +19,8 @@ export interface AtualizarConfigEmpresaPayload {
   endereco?: string;
   corPrimaria?: string;
   corSecundaria?: string;
+  oQueLevar?: string;
+  recomendacoes?: string;
   logo?: File | null;
 }
 
@@ -26,6 +33,8 @@ export async function atualizarConfigEmpresa(payload: AtualizarConfigEmpresaPayl
   if (payload.endereco !== undefined) formData.append('endereco', payload.endereco);
   if (payload.corPrimaria !== undefined) formData.append('corPrimaria', payload.corPrimaria);
   if (payload.corSecundaria !== undefined) formData.append('corSecundaria', payload.corSecundaria);
+  if (payload.oQueLevar !== undefined) formData.append('oQueLevar', payload.oQueLevar);
+  if (payload.recomendacoes !== undefined) formData.append('recomendacoes', payload.recomendacoes);
   if (payload.logo) formData.append('logo', payload.logo);
 
   const res = await api.put('/api/empresa/config', formData, {

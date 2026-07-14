@@ -10,11 +10,19 @@ import type { Agendamento } from '../types';
 
 export function AgendamentosPage() {
   const { clientes, loading: clientesLoading } = useClientes();
-  const { agendamentos, loading: agendamentosLoading, error: agendamentosError, createAgendamento, deleteAgendamento } = useAgendamentos();
+  const { agendamentos, loading: agendamentosLoading, error: agendamentosError, createAgendamento, deleteAgendamento, concluirAgendamento } = useAgendamentos();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [agendamentoConfirmado, setAgendamentoConfirmado] = useState<Agendamento | null>(null);
+  const [filtroStatus, setFiltroStatus] = useState<'TODOS' | 'AGENDADO' | 'CONCLUIDO' | 'CANCELADO'>('TODOS');
+  const [filtroData, setFiltroData] = useState('');
 
   if (clientesLoading) return <LoadingSpinner />;
+
+  const agendamentosFiltrados = agendamentos.filter(a => {
+    if (filtroStatus !== 'TODOS' && a.status !== filtroStatus) return false;
+    if (filtroData && !a.dataHora.startsWith(filtroData)) return false;
+    return true;
+  });
 
   const handleSuccess = (agendamento?: Agendamento) => {
     setIsModalOpen(false);
@@ -76,11 +84,37 @@ export function AgendamentosPage() {
           </div>
         )}
 
+        <div className="form-section" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'flex-end', padding: '1rem 1.25rem' }}>
+          <div className="form-group" style={{ marginBottom: 0, minWidth: 160 }}>
+            <label htmlFor="filtroStatus">Status</label>
+            <select id="filtroStatus" value={filtroStatus} onChange={e => setFiltroStatus(e.target.value as typeof filtroStatus)}>
+              <option value="TODOS">Todos</option>
+              <option value="AGENDADO">Agendado</option>
+              <option value="CONCLUIDO">Concluído</option>
+              <option value="CANCELADO">Cancelado</option>
+            </select>
+          </div>
+          <div className="form-group" style={{ marginBottom: 0, minWidth: 160 }}>
+            <label htmlFor="filtroData">Data</label>
+            <input id="filtroData" type="date" value={filtroData} onChange={e => setFiltroData(e.target.value)} />
+          </div>
+          {(filtroStatus !== 'TODOS' || filtroData) && (
+            <button
+              onClick={() => { setFiltroStatus('TODOS'); setFiltroData(''); }}
+              className="btn btn-secondary"
+              style={{ marginBottom: '1.25rem' }}
+            >
+              ✖️ Limpar filtros
+            </button>
+          )}
+        </div>
+
         <AgendamentoList
-          agendamentos={agendamentos}
+          agendamentos={agendamentosFiltrados}
           loading={agendamentosLoading}
           error={agendamentosError}
           onCancel={deleteAgendamento}
+          onConcluir={concluirAgendamento}
         />
 
         <Modal

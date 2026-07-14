@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/procedimentos").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/casos/publicos").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/empresa/publico").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/pagamentos/webhook/asaas").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/clientes").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/clientes").hasRole("ADMIN")

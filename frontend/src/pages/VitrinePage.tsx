@@ -46,8 +46,12 @@ export default function VitrinePage() {
         )}
 
         {!loading && !error && empresaId && casos.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '3rem', color: '#999' }}>
-            <p style={{ fontSize: '1.2rem' }}>📭 Ainda não há resultados publicados</p>
+          <div style={{ textAlign: 'center', padding: '3rem 1.5rem', color: '#666', background: '#fff', borderRadius: 16, boxShadow: '0 2px 12px rgba(74,20,140,0.08)' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📸</div>
+            <p style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--ca-primary)', marginBottom: 6 }}>Ainda não há resultados publicados</p>
+            <p style={{ fontSize: '0.95rem', maxWidth: 420, margin: '0 auto' }}>
+              Concluiu uma sessão com a gente? Poste seu resultado e apareça aqui na nossa vitrine! ✨
+            </p>
           </div>
         )}
 

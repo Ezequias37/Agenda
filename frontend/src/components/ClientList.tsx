@@ -7,9 +7,11 @@ interface ClientListProps {
   clientes: Cliente[];
   loading: boolean;
   error: string | null;
+  onEdit?: (cliente: Cliente) => void;
+  onDelete?: (cliente: Cliente) => void;
 }
 
-export function ClientList({ clientes, loading, error }: ClientListProps) {
+export function ClientList({ clientes, loading, error, onEdit, onDelete }: ClientListProps) {
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} />;
 
@@ -23,7 +25,7 @@ export function ClientList({ clientes, loading, error }: ClientListProps) {
       ) : (
         <div className="item-list">
           {clientes.map(cliente => (
-            <ClientCard key={cliente.id} cliente={cliente} />
+            <ClientCard key={cliente.id} cliente={cliente} onEdit={onEdit} onDelete={onDelete} />
           ))}
         </div>
       )}

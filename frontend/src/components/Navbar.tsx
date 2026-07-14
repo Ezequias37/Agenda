@@ -56,7 +56,7 @@ export function Navbar() {
         <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📋 Informações</Link>
       </li>
       <li>
-        <button onClick={handleLogout} className="block w-full text-left py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">
+        <button onClick={handleLogout} className="nav-logout-btn block w-full text-left py-2 px-3 text-white transition">
           🚪 Sair
         </button>
       </li>
@@ -87,7 +87,7 @@ export function Navbar() {
         <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📋 Informações</Link>
       </li>
       <li>
-        <button onClick={handleLogout} className="block w-full text-left py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">
+        <button onClick={handleLogout} className="nav-logout-btn block w-full text-left py-2 px-3 text-white transition">
           🚪 Sair
         </button>
       </li>
@@ -98,21 +98,21 @@ export function Navbar() {
 
   return (
     <nav style={{ background: 'linear-gradient(135deg, var(--ca-primary) 0%, var(--ca-primary-light) 100%)' }} className="shadow-md sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 py-4 md:py-5 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2" onClick={fecharMenu}>
+        <Link to="/" className="flex items-center gap-3" onClick={fecharMenu}>
           <img
             src={logoExibicao}
             alt={nomeExibicao}
-            style={{ width: 36, height: 36, minWidth: 36, borderRadius: 10, objectFit: 'contain', background: 'rgba(255,255,255,0.15)' }}
+            style={{ width: 48, height: 48, minWidth: 48, borderRadius: 10, objectFit: 'contain', background: 'rgba(255,255,255,0.15)' }}
           />
-          <span style={{ color: '#fff', fontWeight: 700, fontSize: '1rem', lineHeight: 1.2 }}>
+          <span style={{ color: '#fff', fontWeight: 700, fontSize: '1.25rem', lineHeight: 1.2 }}>
             {nomeExibicao}
           </span>
         </Link>
 
         {/* Menu desktop */}
-        <ul className="hidden md:flex items-center gap-1 text-sm">
+        <ul className="hidden md:flex items-center gap-1 text-lg">
           {links}
         </ul>
 
@@ -123,11 +123,11 @@ export function Navbar() {
           aria-label="Abrir menu"
         >
           {menuAberto ? (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           ) : (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           )}
@@ -137,7 +137,7 @@ export function Navbar() {
       {/* Menu mobile dropdown */}
       {menuAberto && (
         <div className="md:hidden border-t border-white/20" style={{ background: 'var(--ca-primary)' }}>
-          <ul className="px-4 py-3 space-y-1 text-sm">
+          <ul className="px-4 py-3 space-y-1 text-base">
             {links}
           </ul>
         </div>

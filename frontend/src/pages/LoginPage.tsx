@@ -2,7 +2,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { Footer } from '../components/Footer';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -67,8 +66,8 @@ export default function LoginPage() {
       <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:380 }}>
         <div style={{ textAlign:'center', marginBottom:'1.5rem' }}>
           <div style={{ display:'flex', justifyContent:'center', marginBottom:'1rem' }}>
-            <div style={{ width:100, height:100, borderRadius:'50%', border:'3px solid rgba(255,255,255,0.8)', overflow:'hidden', boxShadow:'0 0 30px rgba(74,20,140,0.5), 0 4px 20px rgba(0,0,0,0.4)', background:'var(--ca-primary)', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <img src={logoExibicao} alt={nomeExibicao} style={{ width:'80%', height:'80%', objectFit:'contain' }} />
+            <div style={{ width:260, height:112, borderRadius:22, border:'4px solid #fff', overflow:'hidden', boxShadow:'0 0 0 4px var(--ca-secondary), 0 8px 30px rgba(0,0,0,0.4)', background:'#ffffff', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center', padding:'0 0.75rem' }}>
+              <img src={logoExibicao} alt={nomeExibicao} style={{ width:'92%', maxHeight:'88%', objectFit:'contain' }} />
             </div>
           </div>
           <h1 style={{ fontSize:'1.9rem', fontWeight:700, color:'#fff', textShadow:'0 2px 12px rgba(0,0,0,0.5)', margin:0 }}>{nomeExibicao}</h1>
@@ -129,7 +128,9 @@ export default function LoginPage() {
         </div>
       </div>
       </div>
-      <Footer />
+      <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.65)', fontSize: '0.78rem', padding: '0.75rem 1rem 1rem' }}>
+        © 2026 CLICKAGENDA — Tecnologia CLICKAGENDA
+      </p>
     </div>
   );
 }

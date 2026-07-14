@@ -277,6 +277,23 @@ public class AgendaController {
                 .orElse(ResponseEntity.notFound().<Object>build());
     }
 
+    // --- Concluir agendamento (somente ADMIN) — libera o cliente para postar evolução/case ---
+
+    @PatchMapping("/agendamentos/{id}/concluir")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> concluirAgendamento(@PathVariable Long id) {
+        return agendamentoRepository.findById(id)
+                .map(existente -> {
+                    if (existente.getStatus() == StatusAgendamento.CANCELADO) {
+                        return ResponseEntity.badRequest().<Object>body(
+                                Map.of("erro", "Não é possível concluir um agendamento cancelado"));
+                    }
+                    existente.setStatus(StatusAgendamento.CONCLUIDO);
+                    return ResponseEntity.ok().<Object>body(agendamentoRepository.save(existente));
+                })
+                .orElse(ResponseEntity.notFound().<Object>build());
+    }
+
     // --- Horários disponíveis por data e procedimento ---
 
     @GetMapping("/agendamentos/horarios-disponiveis")

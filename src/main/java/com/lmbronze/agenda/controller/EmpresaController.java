@@ -41,6 +41,24 @@ public class EmpresaController {
         return ResponseEntity.ok(empresa);
     }
 
+    /** Dados públicos da empresa para a página de Informações (sem autenticação). */
+    @GetMapping("/publico")
+    public ResponseEntity<?> obterConfigPublica(@RequestParam Long empresaId) {
+        return empresaRepository.findById(empresaId)
+                .map(empresa -> ResponseEntity.ok(new EmpresaPublicaDTO(
+                        empresa.getId(),
+                        empresa.getNomeFantasia(),
+                        empresa.getTelefone(),
+                        empresa.getEndereco(),
+                        empresa.getLogoUrl(),
+                        empresa.getCorPrimaria(),
+                        empresa.getCorSecundaria(),
+                        empresa.getOQueLevar(),
+                        empresa.getRecomendacoes()
+                )))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PutMapping(value = "/config", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> atualizarConfig(
@@ -52,6 +70,8 @@ public class EmpresaController {
             @RequestParam(required = false) String endereco,
             @RequestParam(required = false) String corPrimaria,
             @RequestParam(required = false) String corSecundaria,
+            @RequestParam(required = false) String oQueLevar,
+            @RequestParam(required = false) String recomendacoes,
             @RequestParam(required = false) MultipartFile logo) {
 
         Empresa empresa = empresaDoUsuario(auth);
@@ -66,6 +86,8 @@ public class EmpresaController {
         if (endereco != null) empresa.setEndereco(endereco);
         if (corPrimaria != null && !corPrimaria.isBlank()) empresa.setCorPrimaria(corPrimaria);
         if (corSecundaria != null && !corSecundaria.isBlank()) empresa.setCorSecundaria(corSecundaria);
+        if (oQueLevar != null) empresa.setOQueLevar(oQueLevar);
+        if (recomendacoes != null) empresa.setRecomendacoes(recomendacoes);
 
         if (logo != null && !logo.isEmpty()) {
             try {
@@ -88,4 +110,8 @@ public class EmpresaController {
         }
         return empresaRepository.findById(usuario.getEmpresa().getId()).orElse(null);
     }
+
+    public record EmpresaPublicaDTO(Long id, String nomeFantasia, String telefone, String endereco,
+                                     String logoUrl, String corPrimaria, String corSecundaria,
+                                     String oQueLevar, String recomendacoes) {}
 }
