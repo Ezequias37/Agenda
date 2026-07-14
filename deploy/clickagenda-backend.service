@@ -1,0 +1,32 @@
+# Serviço systemd para o backend Spring Boot (ClickAgenda)
+#
+# Instalação no servidor (Hostinger VPS):
+#   1. Copie este arquivo para /etc/systemd/system/clickagenda-backend.service
+#   2. Copie o arquivo clickagenda-backend.env.example para
+#      /etc/clickagenda/backend.env e preencha os valores reais
+#   3. sudo systemctl daemon-reload
+#   4. sudo systemctl enable --now clickagenda-backend
+#   5. sudo systemctl status clickagenda-backend
+#   6. Ver logs em tempo real: sudo journalctl -u clickagenda-backend -f
+
+[Unit]
+Description=ClickAgenda - Backend Spring Boot
+After=network.target mysql.service
+Wants=mysql.service
+
+[Service]
+Type=simple
+User=clickagenda
+WorkingDirectory=/opt/clickagenda
+EnvironmentFile=/etc/clickagenda/backend.env
+ExecStart=/usr/bin/java -jar /opt/clickagenda/agenda-0.0.1-SNAPSHOT.jar
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=10
+
+# Hardening básico (opcional, mas recomendado)
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
