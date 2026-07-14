@@ -12,6 +12,7 @@ import HomeRedirect from './components/HomeRedirect';
 import ConfiguracaoPage from './pages/ConfiguracaoPage';
 import CasosPendentesPage from './pages/CasosPendentesPage';
 import VitrinePage from './pages/VitrinePage';
+import AlterarSenhaPage from './pages/AlterarSenhaPage';
 
 export const router = createBrowserRouter([
   {
@@ -56,6 +57,15 @@ export const router = createBrowserRouter([
       {
         path: '/vitrine',
         element: <VitrinePage />,
+      },
+      // Alterar senha — qualquer usuário autenticado (admin ou cliente)
+      {
+        path: '/alterar-senha',
+        element: (
+          <ProtectedRoute>
+            <AlterarSenhaPage />
+          </ProtectedRoute>
+        ),
       },
       // Rotas do admin
       {

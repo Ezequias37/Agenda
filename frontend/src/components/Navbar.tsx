@@ -56,6 +56,9 @@ export function Navbar() {
         <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📋 Informações</Link>
       </li>
       <li>
+        <Link to="/alterar-senha" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">🔒 Alterar Senha</Link>
+      </li>
+      <li>
         <button onClick={handleLogout} className="nav-logout-btn block w-full text-left py-2 px-3 text-white transition">
           🚪 Sair
         </button>
@@ -85,6 +88,9 @@ export function Navbar() {
       </li>
       <li>
         <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📋 Informações</Link>
+      </li>
+      <li>
+        <Link to="/alterar-senha" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">🔒 Alterar Senha</Link>
       </li>
       <li>
         <button onClick={handleLogout} className="nav-logout-btn block w-full text-left py-2 px-3 text-white transition">

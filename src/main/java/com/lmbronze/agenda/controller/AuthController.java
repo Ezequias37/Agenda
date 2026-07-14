@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,6 +105,22 @@ public class AuthController {
                 });
     }
 
+    @PatchMapping("/senha")
+    public ResponseEntity<?> alterarSenha(@RequestBody AlterarSenhaRequest req, Authentication auth) {
+        Usuario usuario = (Usuario) auth.getPrincipal();
+
+        if (req.senhaAtual() == null || !passwordEncoder.matches(req.senhaAtual(), usuario.getSenha())) {
+            return ResponseEntity.badRequest().body(Map.of("erro", "Senha atual incorreta"));
+        }
+        if (req.novaSenha() == null || req.novaSenha().length() < 6) {
+            return ResponseEntity.badRequest().body(Map.of("erro", "A nova senha deve ter pelo menos 6 caracteres"));
+        }
+
+        usuario.setSenha(passwordEncoder.encode(req.novaSenha()));
+        usuarioRepository.save(usuario);
+        return ResponseEntity.ok(Map.of("mensagem", "Senha alterada com sucesso"));
+    }
+
     @PostMapping("/criar-admin")
     public ResponseEntity<?> criarAdmin(@RequestBody CriarAdminRequest req) {
         if (usuarioRepository.findByEmail(req.email()).isPresent()) {
@@ -159,4 +177,5 @@ public class AuthController {
     public record RegisterRequest(String nome, String email, String telefone, String senha, Long empresaId) {}
     public record LoginRequest(String email, String senha) {}
     public record CriarAdminRequest(String nomeFantasia, String email, String senha) {}
+    public record AlterarSenhaRequest(String senhaAtual, String novaSenha) {}
 }

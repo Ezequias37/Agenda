@@ -551,6 +551,15 @@ textarea {
     text-align: center;
   }
 
+  /* Em coluna, o main-axis do flex vira vertical — sem isso, o
+     "flex: 1 1 200px" do desktop faria cada bloco crescer até ~200px de
+     ALTURA (em vez de largura), abrindo vãos enormes entre as seções. */
+  .app-footer-col,
+  .app-footer-col-badges {
+    flex: none;
+    min-width: 0;
+  }
+
   .app-footer-badges {
     justify-content: center;
   }
