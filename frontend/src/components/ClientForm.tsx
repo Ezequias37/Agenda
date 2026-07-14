@@ -17,6 +17,7 @@ export function ClientForm({ clienteInicial, onSubmit, onSuccess, onUploadFoto }
     nome: clienteInicial?.nome ?? '',
     email: clienteInicial?.email ?? '',
     telefone: clienteInicial?.telefone ?? '',
+    cpf: clienteInicial?.cpf ?? '',
   });
   const [foto, setFoto] = useState<File | null>(null);
   const [previewFoto, setPreviewFoto] = useState<string | null>(null);
@@ -45,7 +46,7 @@ export function ClientForm({ clienteInicial, onSubmit, onSuccess, onUploadFoto }
         await onUploadFoto(foto);
         setEnviandoFoto(false);
       }
-      if (!clienteInicial) setFormData({ nome: '', email: '', telefone: '' });
+      if (!clienteInicial) setFormData({ nome: '', email: '', telefone: '', cpf: '' });
       setFoto(null);
       setPreviewFoto(null);
       onSuccess?.();
@@ -114,6 +115,18 @@ export function ClientForm({ clienteInicial, onSubmit, onSuccess, onUploadFoto }
           onChange={handleChange}
           placeholder="(11) 99999-9999"
           required
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="cpf">🪪 CPF (necessário para gerar cobrança PIX)</label>
+        <input
+          id="cpf"
+          type="text"
+          name="cpf"
+          value={formData.cpf}
+          onChange={handleChange}
+          placeholder="000.000.000-00"
         />
       </div>
 

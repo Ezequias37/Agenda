@@ -103,6 +103,7 @@ public class AgendaController {
                     existente.setNome(cliente.getNome());
                     existente.setEmail(cliente.getEmail());
                     existente.setTelefone(cliente.getTelefone());
+                    existente.setCpf(cliente.getCpf());
                     return ResponseEntity.ok(clienteRepository.save(existente));
                 })
                 .orElse(ResponseEntity.notFound().build());

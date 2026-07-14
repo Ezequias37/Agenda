@@ -3,6 +3,7 @@ export interface Cliente {
   nome: string;
   email: string;
   telefone: string;
+  cpf?: string | null;
   fotoUrl?: string | null;
 }
 
@@ -74,6 +75,7 @@ export interface CreateClienteDTO {
   nome: string;
   email: string;
   telefone: string;
+  cpf?: string;
 }
 
 export interface Procedimento {
