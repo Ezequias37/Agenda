@@ -6,7 +6,7 @@ interface UseAgendamentosReturn {
   agendamentos: Agendamento[];
   loading: boolean;
   error: string | null;
-  createAgendamento: (data: CreateAgendamentoDTO) => Promise<void>;
+  createAgendamento: (data: CreateAgendamentoDTO) => Promise<Agendamento>;
   deleteAgendamento: (id: number) => Promise<void>;
   refetch: () => Promise<void>;
 }
@@ -36,8 +36,9 @@ export function useAgendamentos(): UseAgendamentosReturn {
   const createAgendamento = async (data: CreateAgendamentoDTO) => {
     try {
       setError(null);
-      await agendamentoService.createAgendamento(data);
+      const criado = await agendamentoService.createAgendamento(data);
       await fetchAgendamentos();
+      return criado;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao criar agendamento');
       throw err;

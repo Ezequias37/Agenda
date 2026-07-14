@@ -7,9 +7,11 @@ import { InformacoesPage } from './pages/InformacoesPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import MeusAgendamentosPage from './pages/client/MeusAgendamentosPage';
-import OAuth2CallbackPage from './pages/OAuth2CallbackPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomeRedirect from './components/HomeRedirect';
+import ConfiguracaoPage from './pages/ConfiguracaoPage';
+import CasosPendentesPage from './pages/CasosPendentesPage';
+import VitrinePage from './pages/VitrinePage';
 
 export const router = createBrowserRouter([
   {
@@ -19,10 +21,6 @@ export const router = createBrowserRouter([
   {
     path: '/cadastro',
     element: <RegisterPage />,
-  },
-  {
-    path: '/oauth2/callback',
-    element: <OAuth2CallbackPage />,
   },
   {
     path: '/',
@@ -54,6 +52,11 @@ export const router = createBrowserRouter([
         path: '/informacoes',
         element: <InformacoesPage />,
       },
+      // Vitrine de cases de sucesso — pública (com navbar)
+      {
+        path: '/vitrine',
+        element: <VitrinePage />,
+      },
       // Rotas do admin
       {
         path: '/admin',
@@ -76,6 +79,22 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute role="ADMIN">
             <AgendamentosPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/configuracao',
+        element: (
+          <ProtectedRoute role="ADMIN">
+            <ConfiguracaoPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/casos',
+        element: (
+          <ProtectedRoute role="ADMIN">
+            <CasosPendentesPage />
           </ProtectedRoute>
         ),
       },

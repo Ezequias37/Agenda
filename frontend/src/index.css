@@ -1,14 +1,22 @@
 ﻿@import "tailwindcss";
 
-/* Cores do tema - Bronzeamento */
+/* Identidade visual oficial CLICKAGENDA (tema padrão / fallback white-label) */
 :root {
-  --primary: #D4A574;      /* Dourado/Bronze */
-  --primary-dark: #8B6F47; /* Bronze escuro */
-  --accent: #F4A460;       /* Sandy brown */
+  /* Tokens de marca - podem ser sobrescritos em runtime pelo ThemeContext
+     com as cores (corPrimaria/corSecundaria) da empresa logada. */
+  --ca-primary: #4A148C;       /* Roxo Profundo */
+  --ca-primary-light: #7B1FA2; /* Roxo Claro */
+  --ca-secondary: #00897B;     /* Verde Teal */
+  --ca-secondary-light: #26A69A; /* Verde Claro */
+
+  /* Aliases usados pelos componentes/classes existentes */
+  --primary: var(--ca-primary-light);
+  --primary-dark: var(--ca-primary);
+  --accent: var(--ca-secondary);
   --dark: #2C2C2C;         /* Cinza escuro */
-  --light: #F9F7F4;        /* Bege claro */
+  --light: #F8F6FB;        /* Lilás claro */
   --white: #FFFFFF;
-  --border: #E8DCC8;
+  --border: #E3D5F0;
   --success: #27AE60;
   --danger: #E74C3C;
   --warning: #F39C12;
@@ -23,7 +31,7 @@
 
 html, body {
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, var(--light) 0%, #F5E6D3 100%);
+  background: linear-gradient(135deg, var(--light) 0%, #E9DEF5 100%);
   color: var(--dark);
   min-height: 100vh;
   overflow-x: hidden;
@@ -90,14 +98,14 @@ main {
   background: var(--white);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(139, 111, 71, 0.15);
+  box-shadow: 0 4px 20px rgba(74, 20, 140, 0.15);
   border-left: 5px solid var(--primary);
   transition: all 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(139, 111, 71, 0.25);
+  box-shadow: 0 8px 30px rgba(74, 20, 140, 0.25);
 }
 
 .card-title {
@@ -121,7 +129,7 @@ main {
 
 /* INFO BOX */
 .info-box {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+  background: linear-gradient(135deg, var(--ca-secondary) 0%, var(--ca-primary) 100%);
   color: var(--white);
   padding: 1.5rem;
   border-radius: 12px;
@@ -161,7 +169,7 @@ main {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+  box-shadow: 0 6px 20px rgba(74, 20, 140, 0.4);
 }
 
 .btn-primary:disabled {
@@ -201,7 +209,7 @@ main {
   background: var(--white);
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(139, 111, 71, 0.15);
+  box-shadow: 0 4px 20px rgba(74, 20, 140, 0.15);
   margin-bottom: 1.5rem;
 }
 
@@ -231,7 +239,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.15);
+  box-shadow: 0 0 0 3px rgba(74, 20, 140, 0.15);
 }
 
 textarea {
@@ -321,14 +329,14 @@ textarea {
   background: var(--white);
   border-radius: 12px;
   padding: 1.25rem;
-  box-shadow: 0 4px 15px rgba(139, 111, 71, 0.1);
+  box-shadow: 0 4px 15px rgba(74, 20, 140, 0.1);
   border-top: 4px solid var(--primary);
   transition: all 0.3s ease;
 }
 
 .item-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(139, 111, 71, 0.2);
+  box-shadow: 0 6px 25px rgba(74, 20, 140, 0.2);
 }
 
 .item-card h3 {
@@ -387,6 +395,71 @@ textarea {
   margin-bottom: 0.5rem;
 }
 
+/* FOOTER GLOBAL */
+.app-footer {
+  background: #1a1a2e;
+  color: #cbd5e1;
+  padding: 2rem 1.25rem 1.5rem;
+  margin-top: auto;
+}
+
+.app-footer-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
+}
+
+.app-footer-col {
+  flex: 1 1 220px;
+  min-width: 200px;
+}
+
+.app-footer-col-badges {
+  flex: 2 1 320px;
+  min-width: 260px;
+}
+
+.app-footer-col h4 {
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.app-footer-col p {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin: 0 0 0.4rem;
+}
+
+.app-footer-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.5rem;
+}
+
+.app-footer-badges span {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  white-space: nowrap;
+}
+
+.app-footer-brand {
+  text-align: right;
+}
+
+.app-footer-brand p {
+  color: #94a3b8;
+}
+
+.app-footer-brand .app-footer-version {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
 /* ========================
    RESPONSIVO - MOBILE
    ======================== */
@@ -418,6 +491,19 @@ textarea {
 
   .info-box ul {
     line-height: 1.8;
+  }
+
+  .app-footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .app-footer-badges {
+    justify-content: center;
+  }
+
+  .app-footer-brand {
+    text-align: center;
   }
 
   /* Tabelas com scroll horizontal */

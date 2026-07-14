@@ -30,7 +30,7 @@ export function AgendamentoList({ agendamentos, loading, error, onCancel }: Agen
     <div>
       {ativos.length > 0 && (
         <>
-          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--primary)', margin: '0 0 0.75rem' }}>☀️ Agendados ({ativos.length})</h2>
+          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--primary)', margin: '0 0 0.75rem' }}>📅 Agendados ({ativos.length})</h2>
           <div className="item-list" style={{ marginBottom: '1.5rem' }}>
             {ativos.map(a => <AgendamentoCard key={a.id} agendamento={a} onCancel={onCancel} />)}
           </div>

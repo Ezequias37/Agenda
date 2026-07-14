@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { Cliente, Procedimento, SlotDTO } from '../types';
+import type { Agendamento, Cliente, Procedimento, SlotDTO } from '../types';
 import { PROCEDIMENTOS } from '../types';
 import { ProcedimentoSelect } from './ProcedimentoSelect';
 import { ErrorMessage } from './ErrorMessage';
@@ -8,8 +8,8 @@ import { agendamentoService } from '../services/agendamentoService';
 interface AgendamentoFormProps {
   clientes?: Cliente[];
   clienteFixo?: number;
-  onSubmit?: (data: any) => Promise<void>;
-  onSuccess?: (dataHoraAgendada?: string) => void;
+  onSubmit?: (data: any) => Promise<Agendamento | void>;
+  onSuccess?: (agendamentoCriado?: Agendamento) => void;
 }
 
 export function AgendamentoForm({ clientes, clienteFixo, onSubmit, onSuccess }: AgendamentoFormProps) {
@@ -56,14 +56,15 @@ export function AgendamentoForm({ clientes, clienteFixo, onSubmit, onSuccess }: 
         procedimento: { id: selectedProcedimento.id },
         status: 'AGENDADO',
       };
-      if (onSubmit) { await onSubmit(data); }
-      else { await agendamentoService.createAgendamento(data as any); }
+      let criado: Agendamento | void;
+      if (onSubmit) { criado = await onSubmit(data); }
+      else { criado = await agendamentoService.createAgendamento(data as any); }
       setClienteId('');
       setDataSelecionada('');
       setSelectedProcedimento(null);
       setSlots([]);
       setSlotSelecionado(null);
-      onSuccess?.(slotSelecionado.dataHora);
+      onSuccess?.(criado ?? undefined);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao criar agendamento');
     } finally {

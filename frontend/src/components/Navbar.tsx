@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 export function Navbar() {
   const { usuario, logout } = useAuth();
+  const { nomeExibicao, logoExibicao } = useTheme();
   const navigate = useNavigate();
   const [menuAberto, setMenuAberto] = useState(false);
 
@@ -18,13 +20,21 @@ export function Navbar() {
   const linksPublicos = (
     <>
       <li>
-        <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-amber-200 hover:text-white transition rounded hover:bg-white/10">Informações</Link>
+        <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">Informações</Link>
       </li>
       <li>
-        <Link to="/login" onClick={fecharMenu} className="block py-2 px-3 text-amber-200 hover:text-white transition rounded hover:bg-white/10">Entrar</Link>
+        <Link to="/vitrine" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">🌟 Vitrine</Link>
       </li>
       <li>
-        <Link to="/cadastro" onClick={fecharMenu} className="block py-2 px-3 bg-amber-500 hover:bg-amber-400 text-white rounded-lg transition font-semibold text-center">
+        <Link to="/login" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">Entrar</Link>
+      </li>
+      <li>
+        <Link
+          to="/cadastro"
+          onClick={fecharMenu}
+          className="block py-2 px-3 text-white rounded-lg transition font-semibold text-center"
+          style={{ background: 'var(--ca-secondary)' }}
+        >
           Cadastrar
         </Link>
       </li>
@@ -34,16 +44,19 @@ export function Navbar() {
   const linksCliente = (
     <>
       <li className="px-3 py-2">
-        <span className="text-amber-300 text-sm font-medium">Olá, {usuario?.nome.split(' ')[0]} 👋</span>
+        <span className="text-white/90 text-sm font-medium">Olá, {usuario?.nome.split(' ')[0]} 👋</span>
       </li>
       <li>
-        <Link to="/meus-agendamentos" onClick={fecharMenu} className="block py-2 px-3 text-amber-200 hover:text-white transition rounded hover:bg-white/10">☀️ Meus Agendamentos</Link>
+        <Link to="/meus-agendamentos" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📅 Meus Agendamentos</Link>
       </li>
       <li>
-        <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-amber-200 hover:text-white transition rounded hover:bg-white/10">📋 Informações</Link>
+        <Link to="/vitrine" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">🌟 Vitrine</Link>
       </li>
       <li>
-        <button onClick={handleLogout} className="block w-full text-left py-2 px-3 text-amber-200 hover:text-white transition rounded hover:bg-white/10">
+        <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📋 Informações</Link>
+      </li>
+      <li>
+        <button onClick={handleLogout} className="block w-full text-left py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">
           🚪 Sair
         </button>
       </li>
@@ -53,19 +66,28 @@ export function Navbar() {
   const linksAdmin = (
     <>
       <li>
-        <Link to="/admin" onClick={fecharMenu} className="block py-2 px-3 text-amber-200 hover:text-white transition rounded hover:bg-white/10">📊 Dashboard</Link>
+        <Link to="/admin" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📊 Dashboard</Link>
       </li>
       <li>
-        <Link to="/admin/clientes" onClick={fecharMenu} className="block py-2 px-3 text-amber-200 hover:text-white transition rounded hover:bg-white/10">👥 Clientes</Link>
+        <Link to="/admin/clientes" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">👥 Clientes</Link>
       </li>
       <li>
-        <Link to="/admin/agendamentos" onClick={fecharMenu} className="block py-2 px-3 text-amber-200 hover:text-white transition rounded hover:bg-white/10">📅 Agendamentos</Link>
+        <Link to="/admin/agendamentos" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📅 Agendamentos</Link>
       </li>
       <li>
-        <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-amber-200 hover:text-white transition rounded hover:bg-white/10">📋 Informações</Link>
+        <Link to="/admin/configuracao" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">⚙️ Configurações</Link>
       </li>
       <li>
-        <button onClick={handleLogout} className="block w-full text-left py-2 px-3 text-amber-200 hover:text-white transition rounded hover:bg-white/10">
+        <Link to="/admin/casos" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📸 Cases Pendentes</Link>
+      </li>
+      <li>
+        <Link to="/vitrine" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">🌟 Vitrine</Link>
+      </li>
+      <li>
+        <Link to="/informacoes" onClick={fecharMenu} className="block py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">📋 Informações</Link>
+      </li>
+      <li>
+        <button onClick={handleLogout} className="block w-full text-left py-2 px-3 text-white/85 hover:text-white transition rounded hover:bg-white/10">
           🚪 Sair
         </button>
       </li>
@@ -75,17 +97,17 @@ export function Navbar() {
   const links = !usuario ? linksPublicos : usuario.role === 'ADMIN' ? linksAdmin : linksCliente;
 
   return (
-    <nav style={{ background: 'linear-gradient(135deg, #78350f 0%, #92400e 100%)' }} className="shadow-md sticky top-0 z-50">
+    <nav style={{ background: 'linear-gradient(135deg, var(--ca-primary) 0%, var(--ca-primary-light) 100%)' }} className="shadow-md sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2" onClick={fecharMenu}>
           <img
-            src="/logo-lm.png"
-            alt="LM Bronzeamentos"
-            style={{ width: 36, height: 36, minWidth: 36, borderRadius: '50%', objectFit: 'cover', border: '2px solid #fbbf24' }}
+            src={logoExibicao}
+            alt={nomeExibicao}
+            style={{ width: 36, height: 36, minWidth: 36, borderRadius: 10, objectFit: 'contain', background: 'rgba(255,255,255,0.15)' }}
           />
-          <span style={{ fontFamily: 'Playfair Display, serif', color: '#fff', fontWeight: 700, fontSize: '1rem', lineHeight: 1.2 }}>
-            LM Bronzeamentos
+          <span style={{ color: '#fff', fontWeight: 700, fontSize: '1rem', lineHeight: 1.2 }}>
+            {nomeExibicao}
           </span>
         </Link>
 
@@ -114,7 +136,7 @@ export function Navbar() {
 
       {/* Menu mobile dropdown */}
       {menuAberto && (
-        <div className="md:hidden border-t border-amber-800/50" style={{ background: 'rgba(120, 53, 15, 0.97)' }}>
+        <div className="md:hidden border-t border-white/20" style={{ background: 'var(--ca-primary)' }}>
           <ul className="px-4 py-3 space-y-1 text-sm">
             {links}
           </ul>

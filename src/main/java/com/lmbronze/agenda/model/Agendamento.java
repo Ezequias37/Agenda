@@ -2,6 +2,12 @@ package com.lmbronze.agenda.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,14 +21,22 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import com.lmbronze.agenda.util.SanitizadorUtil;
+
 @Entity
 @Table(name = "agendamentos")
+@FilterDef(name = "empresaFilter", parameters = @ParamDef(name = "empresaId", type = Long.class))
+@Filter(name = "empresaFilter", condition = "empresa_id = :empresaId")
 @Data
 public class Agendamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -40,4 +54,43 @@ public class Agendamento {
 
     @Enumerated(EnumType.STRING)
     private StatusAgendamento status = StatusAgendamento.AGENDADO;
+
+    @Column(nullable = false)
+    private Boolean whatsappConfirmacaoEnviado = false;
+
+    @Column(nullable = false)
+    private Boolean whatsappLembreteEnviado = false;
+
+    @Column(nullable = false)
+    private Boolean whatsappCancelamentoEnviado = false;
+
+    /** Valor cobrado pela sessão (herda o preço do procedimento por padrão). */
+    private Double valor;
+
+    @Column(nullable = false)
+    private Boolean pago = false;
+
+    /** Id da cobrança PIX no gateway de pagamento (Asaas). */
+    private String codigoPagamento;
+
+    @Column(columnDefinition = "TEXT")
+    private String qrCodePix;
+
+    @Column(columnDefinition = "TEXT")
+    private String pixCopiaECola;
+
+    private String linkPagamento;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime criadoEm;
+
+    @UpdateTimestamp
+    private LocalDateTime atualizadoEm;
+
+    @jakarta.persistence.PrePersist
+    @jakarta.persistence.PreUpdate
+    private void sanitizar() {
+        this.descricao = SanitizadorUtil.limpar(descricao);
+    }
 }

@@ -1,6 +1,8 @@
 ﻿import { useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import { Footer } from '../components/Footer';
 
 interface Erros {
   nome?: string;
@@ -32,6 +34,7 @@ function forca(senha: string): { nivel: number; texto: string; cor: string } {
 
 export default function RegisterPage() {
   const { register } = useAuth();
+  const { nomeExibicao, logoExibicao } = useTheme();
   const navigate = useNavigate();
   const [form, setForm] = useState({ nome: '', email: '', telefone: '', senha: '', confirmarSenha: '' });
   const [erro, setErro] = useState('');
@@ -106,7 +109,7 @@ export default function RegisterPage() {
   };
 
   const inp = (hasError?: string): React.CSSProperties => ({
-    width:'100%', border:`2px solid ${hasError ? '#e53e3e' : '#e8c99a'}`, borderRadius:10,
+    width:'100%', border:`2px solid ${hasError ? '#e53e3e' : 'var(--border)'}`, borderRadius:10,
     padding:'0.7rem 2.5rem 0.7rem 0.7rem', fontSize:'1rem', outline:'none',
     boxSizing:'border-box', fontFamily:'inherit', transition:'border-color 0.2s',
   });
@@ -114,51 +117,52 @@ export default function RegisterPage() {
   const senhaForca = forca(form.senha);
 
   return (
-    <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'2rem 1rem', background:'linear-gradient(160deg, #3d1c02 0%, #7c3f0a 35%, #b86a1a 65%, #d4935a 100%)', position:'relative', overflow:'hidden' }}>
-      <div style={{ position:'absolute', top:'-20%', right:'-10%', width:'60vw', height:'60vw', maxWidth:500, borderRadius:'50%', background:'rgba(255,180,60,0.08)', pointerEvents:'none' }} />
-      <div style={{ position:'absolute', bottom:'-15%', left:'-10%', width:'50vw', height:'50vw', maxWidth:400, borderRadius:'50%', background:'rgba(255,140,20,0.07)', pointerEvents:'none' }} />
+    <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column', background:'linear-gradient(160deg, #2b0a4e 0%, var(--ca-primary) 35%, var(--ca-primary-light) 65%, var(--ca-secondary) 100%)' }}>
+      <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'2rem 1rem', position:'relative', overflow:'hidden' }}>
+      <div style={{ position:'absolute', top:'-20%', right:'-10%', width:'60vw', height:'60vw', maxWidth:500, borderRadius:'50%', background:'rgba(255,255,255,0.08)', pointerEvents:'none' }} />
+      <div style={{ position:'absolute', bottom:'-15%', left:'-10%', width:'50vw', height:'50vw', maxWidth:400, borderRadius:'50%', background:'rgba(0,137,123,0.15)', pointerEvents:'none' }} />
 
       <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:380 }}>
         <div style={{ textAlign:'center', marginBottom:'1.25rem' }}>
           <div style={{ display:'flex', justifyContent:'center', marginBottom:'0.75rem' }}>
-            <div style={{ width:80, height:80, borderRadius:'50%', border:'3px solid rgba(255,200,80,0.8)', overflow:'hidden', boxShadow:'0 0 25px rgba(212,165,116,0.5), 0 4px 15px rgba(0,0,0,0.4)', background:'#5c2d0a', flexShrink:0 }}>
-              <img src="/logo-lm.png" alt="LM Bronzeamentos" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+            <div style={{ width:80, height:80, borderRadius:'50%', border:'3px solid rgba(255,255,255,0.8)', overflow:'hidden', boxShadow:'0 0 25px rgba(74,20,140,0.5), 0 4px 15px rgba(0,0,0,0.4)', background:'var(--ca-primary)', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <img src={logoExibicao} alt={nomeExibicao} style={{ width:'80%', height:'80%', objectFit:'contain' }} />
             </div>
           </div>
-          <h1 style={{ fontFamily:'Playfair Display, Georgia, serif', fontSize:'1.6rem', fontWeight:700, color:'#fff', textShadow:'0 2px 12px rgba(0,0,0,0.5)', margin:0 }}>LM Bronzeamentos</h1>
+          <h1 style={{ fontSize:'1.6rem', fontWeight:700, color:'#fff', textShadow:'0 2px 12px rgba(0,0,0,0.5)', margin:0 }}>{nomeExibicao}</h1>
         </div>
 
         <div style={{ background:'#fff', borderRadius:20, padding:'1.5rem', boxShadow:'0 20px 60px rgba(0,0,0,0.35)' }}>
-          <h2 style={{ color:'#7c3f0a', fontWeight:700, fontSize:'1.05rem', textAlign:'center', marginBottom:4, marginTop:0 }}>Criar conta</h2>
-          <p style={{ color:'#9a6030', fontSize:'0.82rem', textAlign:'center', marginBottom:'1rem', marginTop:0 }}>Cadastre-se para agendar sua sessao</p>
+          <h2 style={{ color:'var(--ca-primary)', fontWeight:700, fontSize:'1.05rem', textAlign:'center', marginBottom:4, marginTop:0 }}>Criar conta</h2>
+          <p style={{ color:'var(--ca-primary-light)', fontSize:'0.82rem', textAlign:'center', marginBottom:'1rem', marginTop:0 }}>Cadastre-se para agendar sua sessao</p>
 
           {erro && <div style={{ background:'#fff5f5', borderLeft:'4px solid #e53e3e', padding:'0.75rem', borderRadius:6, color:'#c53030', fontSize:'0.875rem', marginBottom:'0.75rem' }}>{erro}</div>}
 
           <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', gap:'0.65rem' }}>
             {/* Nome */}
             <div>
-              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'#7c3f0a', marginBottom:3 }}>Nome completo</label>
+              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:3 }}>Nome completo</label>
               <input type="text" name="nome" value={form.nome} onChange={handleChange} required autoComplete="name" style={inp(erros.nome)} placeholder="Seu nome completo" />
               {erros.nome && <span style={{ fontSize:'0.75rem', color:'#e53e3e', marginTop:2, display:'block' }}>⚠️ {erros.nome}</span>}
             </div>
 
             {/* Email */}
             <div>
-              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'#7c3f0a', marginBottom:3 }}>Email</label>
+              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:3 }}>Email</label>
               <input type="email" name="email" value={form.email} onChange={handleChange} required autoComplete="email" style={inp(erros.email)} placeholder="seu@email.com" />
               {erros.email && <span style={{ fontSize:'0.75rem', color:'#e53e3e', marginTop:2, display:'block' }}>⚠️ {erros.email}</span>}
             </div>
 
             {/* Telefone */}
             <div>
-              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'#7c3f0a', marginBottom:3 }}>Telefone</label>
+              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:3 }}>Telefone</label>
               <input type="tel" name="telefone" value={form.telefone} onChange={handleChange} required autoComplete="tel" style={inp(erros.telefone)} placeholder="(31) 99999-9999" maxLength={16} />
               {erros.telefone && <span style={{ fontSize:'0.75rem', color:'#e53e3e', marginTop:2, display:'block' }}>⚠️ {erros.telefone}</span>}
             </div>
 
             {/* Senha */}
             <div>
-              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'#7c3f0a', marginBottom:3 }}>Senha</label>
+              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:3 }}>Senha</label>
               <div style={{ position:'relative' }}>
                 <input
                   type={mostrarSenha ? 'text' : 'password'} name="senha" value={form.senha}
@@ -166,7 +170,7 @@ export default function RegisterPage() {
                   required autoComplete="new-password" style={inp(erros.senha)} placeholder="Minimo 6 caracteres"
                 />
                 <button type="button" onClick={() => setMostrarSenha(p => !p)}
-                  style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'#9a6030', fontSize:'1rem', padding:4 }}>
+                  style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'var(--ca-primary-light)', fontSize:'1rem', padding:4 }}>
                   {mostrarSenha ? '🙈' : '👁️'}
                 </button>
               </div>
@@ -174,7 +178,7 @@ export default function RegisterPage() {
                 <div style={{ marginTop:4 }}>
                   <div style={{ display:'flex', gap:3, marginBottom:2 }}>
                     {[1,2,3,4,5].map(i => (
-                      <div key={i} style={{ flex:1, height:3, borderRadius:2, background: i <= senhaForca.nivel ? senhaForca.cor : '#e8c99a', transition:'background 0.3s' }} />
+                      <div key={i} style={{ flex:1, height:3, borderRadius:2, background: i <= senhaForca.nivel ? senhaForca.cor : 'var(--border)', transition:'background 0.3s' }} />
                     ))}
                   </div>
                   <span style={{ fontSize:'0.72rem', color: senhaForca.cor }}>Forca: {senhaForca.texto}</span>
@@ -186,7 +190,7 @@ export default function RegisterPage() {
 
             {/* Confirmar Senha */}
             <div>
-              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'#7c3f0a', marginBottom:3 }}>Confirmar senha</label>
+              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:3 }}>Confirmar senha</label>
               <div style={{ position:'relative' }}>
                 <input
                   type={mostrarConfirmar ? 'text' : 'password'} name="confirmarSenha" value={form.confirmarSenha}
@@ -194,7 +198,7 @@ export default function RegisterPage() {
                   required autoComplete="new-password" style={inp(erros.confirmarSenha)} placeholder="Repita a senha"
                 />
                 <button type="button" onClick={() => setMostrarConfirmar(p => !p)}
-                  style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'#9a6030', fontSize:'1rem', padding:4 }}>
+                  style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'var(--ca-primary-light)', fontSize:'1rem', padding:4 }}>
                   {mostrarConfirmar ? '🙈' : '👁️'}
                 </button>
               </div>
@@ -206,17 +210,19 @@ export default function RegisterPage() {
             </div>
 
             <button type="submit" disabled={loading}
-              style={{ width:'100%', background:loading?'#c4956a':'linear-gradient(135deg, #b86a1a 0%, #7c3f0a 100%)', color:'#fff', fontWeight:700, fontSize:'1rem', padding:'0.85rem', borderRadius:10, border:'none', cursor:loading?'not-allowed':'pointer', boxShadow:'0 4px 15px rgba(120,63,10,0.3)', fontFamily:'inherit', marginTop:4 }}>
+              style={{ width:'100%', background:loading?'#b8a4d4':'linear-gradient(135deg, var(--ca-secondary) 0%, var(--ca-primary) 100%)', color:'#fff', fontWeight:700, fontSize:'1rem', padding:'0.85rem', borderRadius:10, border:'none', cursor:loading?'not-allowed':'pointer', boxShadow:'0 4px 15px rgba(74,20,140,0.3)', fontFamily:'inherit', marginTop:4 }}>
               {loading ? '⏳ Criando conta...' : '✅ Criar conta'}
             </button>
           </form>
 
-          <p style={{ textAlign:'center', fontSize:'0.875rem', color:'#9a6030', marginTop:'1rem', marginBottom:0 }}>
+          <p style={{ textAlign:'center', fontSize:'0.875rem', color:'var(--ca-primary-light)', marginTop:'1rem', marginBottom:0 }}>
             Ja tem conta?{' '}
-            <Link to="/login" style={{ fontWeight:700, color:'#7c3f0a', textDecoration:'underline' }}>Entrar</Link>
+            <Link to="/login" style={{ fontWeight:700, color:'var(--ca-primary)', textDecoration:'underline' }}>Entrar</Link>
           </p>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }

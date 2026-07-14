@@ -19,15 +19,15 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final RateLimitFilter rateLimitFilter;
     private final CorsConfigurationSource corsConfigurationSource;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     public SecurityConfig(JwtAuthFilter jwtAuthFilter,
-                          CorsConfigurationSource corsConfigurationSource,
-                          OAuth2SuccessHandler oAuth2SuccessHandler) {
+                          RateLimitFilter rateLimitFilter,
+                          CorsConfigurationSource corsConfigurationSource) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.rateLimitFilter = rateLimitFilter;
         this.corsConfigurationSource = corsConfigurationSource;
-        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
     }
 
     @Bean
@@ -38,9 +38,11 @@ public class SecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/procedimentos").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/casos/publicos").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/pagamentos/webhook/asaas").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/clientes").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/clientes").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/clientes/**").hasRole("ADMIN")
@@ -52,13 +54,13 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/agendamentos").authenticated()
                 .requestMatchers(HttpMethod.PATCH, "/api/agendamentos/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/agendamentos/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/empresa/config").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/empresa/config").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
-            .oauth2Login(oauth2 -> oauth2
-                .successHandler(oAuth2SuccessHandler)
-            )
             .headers(headers -> headers.frameOptions(frame -> frame.disable()))
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(rateLimitFilter, JwtAuthFilter.class);
 
         return http.build();
     }

@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import api from '../services/api';
+import { useTheme } from './ThemeContext';
+import type { EmpresaBranding } from '../types';
 
 interface UsuarioLogado {
   nome: string;
@@ -12,7 +14,6 @@ interface AuthContextType {
   usuario: UsuarioLogado | null;
   token: string | null;
   login: (email: string, senha: string) => Promise<void>;
-  loginWithToken: (token: string, role: string, nome: string, email: string, clienteId: number) => void;
   register: (nome: string, email: string, telefone: string, senha: string) => Promise<void>;
   logout: () => void;
 }
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<UsuarioLogado | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const { setBranding } = useTheme();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -40,14 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUsuario(u);
     localStorage.setItem('token', data.token);
     localStorage.setItem('usuario', JSON.stringify(u));
-  };
-
-  const loginWithToken = (token: string, role: string, nome: string, email: string, clienteId: number) => {
-    setToken(token);
-    const u: UsuarioLogado = { nome, email, role: role as 'ADMIN' | 'CLIENTE', clienteId };
-    setUsuario(u);
-    localStorage.setItem('token', token);
-    localStorage.setItem('usuario', JSON.stringify(u));
+    setBranding((data.empresa as EmpresaBranding) ?? null);
   };
 
   const register = async (nome: string, email: string, telefone: string, senha: string) => {
@@ -58,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUsuario(u);
     localStorage.setItem('token', data.token);
     localStorage.setItem('usuario', JSON.stringify(u));
+    setBranding((data.empresa as EmpresaBranding) ?? null);
   };
 
   const logout = () => {
@@ -65,10 +61,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUsuario(null);
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
+    setBranding(null);
   };
 
   return (
-    <AuthContext.Provider value={{ usuario, token, login, loginWithToken, register, logout }}>
+    <AuthContext.Provider value={{ usuario, token, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

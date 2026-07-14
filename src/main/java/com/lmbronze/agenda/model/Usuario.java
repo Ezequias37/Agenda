@@ -1,13 +1,27 @@
 package com.lmbronze.agenda.model;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Table(name = "usuarios")
@@ -17,6 +31,10 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -31,6 +49,13 @@ public class Usuario implements UserDetails {
     @OneToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime criadoEm;
+
+    @UpdateTimestamp
+    private LocalDateTime atualizadoEm;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

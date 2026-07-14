@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 90" width="300" height="90" role="img" aria-label="ClickAgenda">
+  <defs>
+    <linearGradient id="ca-logo-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4A148C"/>
+      <stop offset="55%" stop-color="#7B1FA2"/>
+      <stop offset="100%" stop-color="#00897B"/>
+    </linearGradient>
+    <linearGradient id="ca-logo-text" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4A148C"/>
+      <stop offset="100%" stop-color="#7B1FA2"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="13" width="64" height="64" rx="18" fill="url(#ca-logo-bg)"/>
+  <rect x="18" y="31" width="36" height="30" rx="4" fill="#ffffff"/>
+  <rect x="18" y="31" width="36" height="9" rx="4" fill="#26A69A"/>
+  <rect x="18" y="36" width="36" height="4" fill="#26A69A"/>
+  <rect x="25" y="24" width="4" height="11" rx="2" fill="#ffffff"/>
+  <rect x="43" y="24" width="4" height="11" rx="2" fill="#ffffff"/>
+  <path d="M25 49 L32 56.5 L48 40" fill="none" stroke="#4A148C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="84" y="46" font-family="'Segoe UI', Arial, sans-serif" font-size="30" font-weight="700" fill="url(#ca-logo-text)">Click</text>
+  <text x="84" y="76" font-family="'Segoe UI', Arial, sans-serif" font-size="30" font-weight="700" fill="#00897B">Agenda</text>
+</svg>

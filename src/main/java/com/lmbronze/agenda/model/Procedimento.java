@@ -1,5 +1,10 @@
 package com.lmbronze.agenda.model;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,4 +29,11 @@ public class Procedimento {
 
     @Column(nullable = false)
     private String categoria;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime criadoEm;
+
+    @UpdateTimestamp
+    private LocalDateTime atualizadoEm;
 }

@@ -1,5 +1,6 @@
 package com.lmbronze.agenda.controller;
 
+import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -20,16 +22,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.lmbronze.agenda.model.Agendamento;
 import com.lmbronze.agenda.model.Cliente;
 import com.lmbronze.agenda.model.Procedimento;
+import com.lmbronze.agenda.model.Role;
 import com.lmbronze.agenda.model.StatusAgendamento;
 import com.lmbronze.agenda.model.Usuario;
 import com.lmbronze.agenda.repository.AgendamentoRepository;
 import com.lmbronze.agenda.repository.ClienteRepository;
 import com.lmbronze.agenda.repository.ProcedimentoRepository;
+import com.lmbronze.agenda.service.AsaasService;
 import com.lmbronze.agenda.service.EmailService;
+import com.lmbronze.agenda.service.FileStorageService;
+import com.lmbronze.agenda.service.WhatsAppService;
 
 import jakarta.validation.Valid;
 
@@ -41,13 +48,21 @@ public class AgendaController {
     private final AgendamentoRepository agendamentoRepository;
     private final ProcedimentoRepository procedimentoRepository;
     private final EmailService emailService;
+    private final FileStorageService fileStorageService;
+    private final WhatsAppService whatsAppService;
+    private final AsaasService asaasService;
 
     public AgendaController(ClienteRepository clienteRepository, AgendamentoRepository agendamentoRepository,
-                            ProcedimentoRepository procedimentoRepository, EmailService emailService) {
+                            ProcedimentoRepository procedimentoRepository, EmailService emailService,
+                            FileStorageService fileStorageService, WhatsAppService whatsAppService,
+                            AsaasService asaasService) {
         this.clienteRepository = clienteRepository;
         this.agendamentoRepository = agendamentoRepository;
         this.procedimentoRepository = procedimentoRepository;
         this.emailService = emailService;
+        this.fileStorageService = fileStorageService;
+        this.whatsAppService = whatsAppService;
+        this.asaasService = asaasService;
     }
 
     // --- Procedimentos (público) ---
@@ -104,6 +119,35 @@ public class AgendaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // --- Foto de perfil do cliente (admin: qualquer; cliente: a própria) ---
+
+    @PostMapping(value = "/clientes/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadFotoCliente(@PathVariable Long id, @RequestParam MultipartFile foto,
+                                                Authentication auth) {
+        Usuario usuario = (Usuario) auth.getPrincipal();
+        boolean isDono = usuario.getCliente() != null && usuario.getCliente().getId().equals(id);
+        if (!isDono && usuario.getRole() != Role.ADMIN) {
+            return ResponseEntity.status(403).body(Map.of("erro", "Sem permissão para esta ação"));
+        }
+        if (foto == null || foto.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("erro", "Envie uma foto"));
+        }
+
+        return clienteRepository.findById(id)
+                .map(cliente -> {
+                    try {
+                        String url = fileStorageService.salvarImagem(foto, "clientes");
+                        cliente.setFotoUrl(url);
+                        return ResponseEntity.ok().body(clienteRepository.save(cliente));
+                    } catch (IllegalArgumentException e) {
+                        return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));
+                    } catch (IOException e) {
+                        return ResponseEntity.internalServerError().body(Map.of("erro", "Falha ao salvar a foto"));
+                    }
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     // --- Agendamentos (admin: todos; cliente: os seus) ---
 
     @GetMapping("/agendamentos")
@@ -149,6 +193,23 @@ public class AgendaController {
 
         Agendamento salvo = agendamentoRepository.save(agendamento);
         emailService.enviarConfirmacaoAgendamento(salvo);
+        if (whatsAppService.enviarConfirmacao(salvo)) {
+            salvo.setWhatsappConfirmacaoEnviado(true);
+            salvo = agendamentoRepository.save(salvo);
+        }
+
+        if (salvo.getValor() == null && salvo.getProcedimento() != null) {
+            salvo.setValor(salvo.getProcedimento().getPreco());
+        }
+        AsaasService.CobrancaPix cobranca = asaasService.gerarCobrancaPix(salvo);
+        if (cobranca != null) {
+            salvo.setCodigoPagamento(cobranca.id());
+            salvo.setQrCodePix(cobranca.qrCodeBase64());
+            salvo.setPixCopiaECola(cobranca.copiaECola());
+            salvo.setLinkPagamento(cobranca.linkPagamento());
+        }
+        salvo = agendamentoRepository.save(salvo);
+
         return ResponseEntity.created(URI.create("/api/agendamentos/" + salvo.getId())).body(salvo);
     }
 
@@ -207,6 +268,10 @@ public class AgendaController {
                     existente.setStatus(StatusAgendamento.CANCELADO);
                     Agendamento salvo = agendamentoRepository.save(existente);
                     emailService.enviarCancelamentoAgendamento(salvo);
+                    if (whatsAppService.enviarCancelamento(salvo)) {
+                        salvo.setWhatsappCancelamentoEnviado(true);
+                        salvo = agendamentoRepository.save(salvo);
+                    }
                     return ResponseEntity.ok().<Object>body(salvo);
                 })
                 .orElse(ResponseEntity.notFound().<Object>build());

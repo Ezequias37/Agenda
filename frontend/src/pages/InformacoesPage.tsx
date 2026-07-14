@@ -19,7 +19,7 @@ export function InformacoesPage() {
         <div className="form-section">
           <h2 style={{ color: 'var(--primary-dark)', marginBottom: '1.5rem', fontSize: '1.5rem' }}>⏱️ Duração</h2>
           <p style={{ fontSize: '1.1rem', color: '#333', marginBottom: '1rem' }}>
-            As sessões de bronzeamento têm duração de <strong>{INFORMACOES_SERVICO.duracao}</strong>
+            As sessões têm duração de <strong>{INFORMACOES_SERVICO.duracao}</strong>
           </p>
         </div>
 
@@ -27,7 +27,7 @@ export function InformacoesPage() {
         <div className="form-section">
           <h2 style={{ color: 'var(--primary-dark)', marginBottom: '1.5rem', fontSize: '1.5rem' }}>🎒 O que Levar</h2>
           <p style={{ marginBottom: '1rem', color: '#666' }}>Para sua sessão, leve os seguintes itens:</p>
-          <div style={{ background: 'rgba(212, 165, 116, 0.1)', padding: '1.5rem', borderRadius: '8px', borderLeft: '4px solid var(--primary)' }}>
+          <div style={{ background: 'rgba(74, 20, 140, 0.06)', padding: '1.5rem', borderRadius: '8px', borderLeft: '4px solid var(--primary)' }}>
             <ul style={{ listStylePosition: 'inside', lineHeight: '2', color: '#333' }}>
               {INFORMACOES_SERVICO.oQueLevr.map((item, idx) => (
                 <li key={idx}>✅ {item}</li>
@@ -51,7 +51,7 @@ export function InformacoesPage() {
 
         {/* Procedimentos */}
         <div className="form-section">
-          <h2 style={{ color: 'var(--primary-dark)', marginBottom: '1.5rem', fontSize: '1.5rem' }}>☀️ Nossos Procedimentos</h2>
+          <h2 style={{ color: 'var(--primary-dark)', marginBottom: '1.5rem', fontSize: '1.5rem' }}>🩺 Nossos Procedimentos</h2>
 
           <div style={{ marginBottom: '2rem' }}>
             <h3 style={{ color: 'var(--primary)', marginBottom: '1rem', fontSize: '1.2rem' }}>🌞 Bronzeamentos</h3>

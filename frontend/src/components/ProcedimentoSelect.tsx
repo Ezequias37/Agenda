@@ -12,7 +12,7 @@ export function ProcedimentoSelect({ procedimentos, selected, onChange }: Proced
 
   return (
     <div className="form-group">
-      <label>☀️ Selecione o Procedimento</label>
+      <label>🩺 Selecione o Procedimento</label>
 
       <div style={{ marginBottom: '1.5rem' }}>
         <h4 style={{ color: 'var(--primary-dark)', marginBottom: '1rem', fontSize: '1rem' }}>🌞 Bronzeamentos</h4>
@@ -25,7 +25,7 @@ export function ProcedimentoSelect({ procedimentos, selected, onChange }: Proced
               border: selected?.id === proc.id ? '2px solid var(--primary)' : '2px solid var(--border)',
               borderRadius: '8px',
               cursor: 'pointer',
-              backgroundColor: selected?.id === proc.id ? 'rgba(212, 165, 116, 0.1)' : 'transparent',
+              backgroundColor: selected?.id === proc.id ? 'rgba(74, 20, 140, 0.08)' : 'transparent',
               transition: 'all 0.2s ease',
             }}>
               <input
@@ -63,7 +63,7 @@ export function ProcedimentoSelect({ procedimentos, selected, onChange }: Proced
               border: selected?.id === proc.id ? '2px solid var(--primary)' : '2px solid var(--border)',
               borderRadius: '8px',
               cursor: 'pointer',
-              backgroundColor: selected?.id === proc.id ? 'rgba(212, 165, 116, 0.1)' : 'transparent',
+              backgroundColor: selected?.id === proc.id ? 'rgba(74, 20, 140, 0.08)' : 'transparent',
               transition: 'all 0.2s ease',
             }}>
               <input

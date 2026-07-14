@@ -1,133 +1,317 @@
 {
   "info": {
-    "name": "Agenda API - Teste de Email",
-    "description": "Coleção para testar envio de e-mail com Mailtrap",
+    "name": "Agenda API - Produção (187.127.36.124)",
+    "description": "Coleção completa para testar a API em produção no Hostinger.\n\n**Como usar:**\n1. Execute '0. Login (Admin)' — o token JWT é salvo automaticamente\n2. Todos os demais requests já usam o token via {{token}}\n\n**Variáveis da coleção:**\n- `baseUrl` = http://187.127.36.124:8080\n- `token` = preenchido automaticamente após login",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://187.127.36.124:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
   "item": [
     {
-      "name": "1. Criar Cliente",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao.silva@test.com\",\n  \"telefone\": \"(11) 99999-8888\"\n}"
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/clientes",
-          "protocol": "http",
-          "host": [
-            "localhost"
+      "name": "🔐 Autenticação",
+      "item": [
+        {
+          "name": "0. Login (Admin) ★ Execute primeiro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    console.log('✅ Token salvo! Role:', json.role);",
+                  "} else {",
+                  "    console.log('❌ Login falhou:', pm.response.text());",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
           ],
-          "port": "8080",
-          "path": [
-            "api",
-            "clientes"
-          ]
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@lmbronze.com.br\",\n  \"senha\": \"SUA_SENHA_ADMIN\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Faz login e salva o JWT automaticamente na variável {{token}}.\n\n⚠️ Substitua email/senha pelas credenciais do admin em produção."
+          },
+          "response": []
         },
-        "description": "Cria um novo cliente. Salve o ID retornado para usar nos próximos passos."
-      },
-      "response": []
+        {
+          "name": "Login (Cliente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    console.log('✅ Token salvo! Role:', json.role, '| clienteId:', json.clienteId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"cliente@email.com\",\n  \"senha\": \"senha123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar novo cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Teste\",\n  \"email\": \"maria.teste@email.com\",\n  \"telefone\": \"(11) 99999-8888\",\n  \"senha\": \"senha123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Cria conta de cliente. Não requer autenticação."
+          },
+          "response": []
+        }
+      ]
     },
     {
-      "name": "2. Listar Clientes",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/clientes",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "clientes"
-          ]
-        },
-        "description": "Lista todos os clientes cadastrados"
-      },
-      "response": []
+      "name": "📋 Procedimentos (público)",
+      "item": [
+        {
+          "name": "Listar Procedimentos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/procedimentos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "procedimentos"]
+            },
+            "description": "Público — não requer autenticação."
+          },
+          "response": []
+        }
+      ]
     },
     {
-      "name": "3. Criar Agendamento (Dispara Email Confirmação)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"cliente\": {\n    \"id\": 1\n  },\n  \"dataHora\": \"2026-05-25T14:30:00\",\n  \"descricao\": \"Consulta de rotina\",\n  \"status\": \"AGENDADO\"\n}"
+      "name": "👥 Clientes (ADMIN)",
+      "item": [
+        {
+          "name": "Listar Clientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clientes"]
+            },
+            "description": "Requer role ADMIN."
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8080/api/agendamentos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "agendamentos"
-          ]
+        {
+          "name": "Buscar Cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clientes", "1"]
+            }
+          },
+          "response": []
         },
-        "description": "Cria um novo agendamento. ⚠️ DISPARA E-MAIL DE CONFIRMAÇÃO para o cliente!"
-      },
-      "response": []
+        {
+          "name": "Criar Cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao.silva@test.com\",\n  \"telefone\": \"(11) 99999-8888\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clientes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva Atualizado\",\n  \"email\": \"joao.silva@test.com\",\n  \"telefone\": \"(11) 88888-7777\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clientes", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clientes", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
     },
     {
-      "name": "4. Listar Agendamentos",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/agendamentos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "agendamentos"
-          ]
+      "name": "📅 Agendamentos",
+      "item": [
+        {
+          "name": "Listar Agendamentos (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/agendamentos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agendamentos"]
+            }
+          },
+          "response": []
         },
-        "description": "Lista todos os agendamentos"
-      },
-      "response": []
-    },
-    {
-      "name": "5. Cancelar Agendamento (Dispara Email Cancelamento)",
-      "request": {
-        "method": "DELETE",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/agendamentos/1",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "agendamentos",
-            "1"
-          ]
+        {
+          "name": "Meus Agendamentos (cliente logado)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/agendamentos/meus",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agendamentos", "meus"]
+            }
+          },
+          "response": []
         },
-        "description": "Cancela um agendamento. ⚠️ DISPARA E-MAIL DE CANCELAMENTO para o cliente!"
-      },
-      "response": []
+        {
+          "name": "Horários Disponíveis",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/agendamentos/horarios-disponiveis?data=2026-07-10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agendamentos", "horarios-disponiveis"],
+              "query": [
+                { "key": "data", "value": "2026-07-10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Agendamento ⚠️ (envia email de confirmação)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": { \"id\": 1 },\n  \"dataHora\": \"2026-07-10T14:30:00\",\n  \"descricao\": \"Sessão de bronzeamento\",\n  \"status\": \"AGENDADO\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/agendamentos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agendamentos"]
+            },
+            "description": "⚠️ DISPARA E-MAIL DE CONFIRMAÇÃO para o cliente!"
+          },
+          "response": []
+        },
+        {
+          "name": "Cancelar Agendamento ⚠️ (envia email de cancelamento) [ADMIN]",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/agendamentos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agendamentos", "1"]
+            },
+            "description": "⚠️ DISPARA E-MAIL DE CANCELAMENTO para o cliente! Requer role ADMIN."
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }
