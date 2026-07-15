@@ -51,86 +51,95 @@ export default function LoginPage() {
     }
   };
 
-  const inputStyle = (hasError?: string): React.CSSProperties => ({
-    width: '100%', border: `2px solid ${hasError ? '#e53e3e' : 'var(--border)'}`, borderRadius: 10,
-    padding: '0.75rem 2.5rem 0.75rem 0.75rem', fontSize: '1rem', outline: 'none',
-    boxSizing: 'border-box', fontFamily: 'inherit', transition: 'border-color 0.2s',
-  });
-
   return (
-    <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column', background:'linear-gradient(160deg, #2b0a4e 0%, var(--ca-primary) 35%, var(--ca-primary-light) 65%, var(--ca-secondary) 100%)' }}>
-      <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'2rem 1rem', position:'relative', overflow:'hidden' }}>
-      <div style={{ position:'absolute', top:'-20%', right:'-10%', width:'60vw', height:'60vw', maxWidth:500, borderRadius:'50%', background:'rgba(255,255,255,0.08)', pointerEvents:'none' }} />
-      <div style={{ position:'absolute', bottom:'-15%', left:'-10%', width:'50vw', height:'50vw', maxWidth:400, borderRadius:'50%', background:'rgba(0,137,123,0.15)', pointerEvents:'none' }} />
+    <div className="auth-page">
+      <div className="auth-blob auth-blob-1" />
+      <div className="auth-blob auth-blob-2" />
 
-      <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:380 }}>
-        <div style={{ textAlign:'center', marginBottom:'1.5rem' }}>
-          <div style={{ display:'flex', justifyContent:'center', marginBottom:'1rem' }}>
-            <div style={{ width:260, height:112, borderRadius:22, border:'4px solid #fff', overflow:'hidden', boxShadow:'0 0 0 4px var(--ca-secondary), 0 8px 30px rgba(0,0,0,0.4)', background:'#ffffff', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center', padding:'0 0.75rem' }}>
-              <img src={logoExibicao} alt={nomeExibicao} style={{ width:'92%', maxHeight:'88%', objectFit:'contain' }} />
-            </div>
+      <div className="auth-stage">
+        <div className="auth-logo-block">
+          <div className="auth-logo-mark">
+            <img src={logoExibicao} alt={nomeExibicao} />
           </div>
-          <h1 style={{ fontSize:'1.9rem', fontWeight:700, color:'#fff', textShadow:'0 2px 12px rgba(0,0,0,0.5)', margin:0 }}>{nomeExibicao}</h1>
-          <p style={{ color:'rgba(255,255,255,0.9)', fontSize:'0.9rem', marginTop:6 }}>Agende com poucos cliques ✨</p>
+          <div className="auth-wordmark">{nomeExibicao}</div>
+          <div className="auth-tagline">Agende com poucos cliques ✨</div>
         </div>
 
-        <div style={{ background:'#fff', borderRadius:20, padding:'1.75rem 1.5rem', boxShadow:'0 20px 60px rgba(0,0,0,0.35)' }}>
-          <h2 style={{ color:'var(--ca-primary)', fontWeight:700, fontSize:'1.1rem', textAlign:'center', marginBottom:'1.25rem', marginTop:0 }}>Entre na sua conta</h2>
+        <div className="auth-card">
+          <div className="auth-head">
+            <div className="auth-title">Acesse sua conta</div>
+            <div className="auth-sub">Entre para gerenciar sua clínica</div>
+          </div>
 
           {avisoSessao && (
-            <div style={{ background:'#fffbeb', borderLeft:'4px solid #f59e0b', padding:'0.75rem', borderRadius:6, color:'#92400e', fontSize:'0.875rem', marginBottom:'1rem' }}>
+            <div style={{ background: '#fffbeb', borderLeft: '4px solid #f59e0b', padding: '0.75rem', borderRadius: 6, color: '#92400e', fontSize: '0.85rem', marginBottom: '1rem' }}>
               ⚠️ Sua sessão expirou. Por favor, faça login novamente.
             </div>
           )}
 
-          {erro && <div style={{ background:'#fff5f5', borderLeft:'4px solid #e53e3e', padding:'0.75rem', borderRadius:6, color:'#c53030', fontSize:'0.875rem', marginBottom:'1rem' }}>{erro}</div>}
+          {erro && (
+            <div style={{ background: 'var(--red-50)', borderLeft: '4px solid var(--red-600)', padding: '0.75rem', borderRadius: 6, color: '#b91c1c', fontSize: '0.85rem', marginBottom: '1rem' }}>
+              {erro}
+            </div>
+          )}
 
-          <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
-            {/* Email */}
-            <div>
-              <label style={{ display:'block', fontSize:'0.85rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:4 }}>Login</label>
-              <input
-                type="text" value={email} onChange={handleEmail} required
-                style={inputStyle(erros.email)}
-                placeholder="seu@email.com ou admin" autoComplete="username"
-              />
-              {erros.email && <span style={{ fontSize:'0.78rem', color:'#e53e3e', marginTop:3, display:'block' }}>⚠️ {erros.email}</span>}
+          <form onSubmit={handleSubmit}>
+            <div className="auth-field">
+              <label htmlFor="email">Login</label>
+              <div className="auth-input-wrap">
+                <span className="leading-icon">📧</span>
+                <input
+                  id="email" type="text" value={email} onChange={handleEmail} required
+                  placeholder="seu@email.com ou admin" autoComplete="username"
+                />
+              </div>
+              {erros.email && <span style={{ fontSize: '0.78rem', color: 'var(--red-600)', marginTop: 3, display: 'block' }}>⚠️ {erros.email}</span>}
             </div>
 
-            {/* Senha */}
-            <div>
-              <label style={{ display:'block', fontSize:'0.85rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:4 }}>Senha</label>
-              <div style={{ position:'relative' }}>
+            <div className="auth-field">
+              <label htmlFor="senha">Senha</label>
+              <div className="auth-input-wrap">
+                <span className="leading-icon">🔒</span>
                 <input
+                  id="senha"
                   type={mostrarSenha ? 'text' : 'password'}
                   value={senha} onChange={e => setSenha(e.target.value)}
                   onKeyDown={handleCapsLock} onKeyUp={handleCapsLock}
-                  required style={inputStyle()} placeholder="••••••••" autoComplete="current-password"
+                  required placeholder="••••••••" autoComplete="current-password"
                 />
-                <button type="button" onClick={() => setMostrarSenha(p => !p)}
-                  style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'var(--ca-primary-light)', fontSize:'1.1rem', padding:4 }}>
+                <button type="button" className="auth-toggle-visibility" onClick={() => setMostrarSenha(p => !p)} aria-label="Mostrar senha">
                   {mostrarSenha ? '🙈' : '👁️'}
                 </button>
               </div>
-              {capsLock && <span style={{ fontSize:'0.78rem', color:'#d97706', marginTop:3, display:'block' }}>⚠️ Caps Lock ativado</span>}
+              {capsLock && <span style={{ fontSize: '0.78rem', color: '#d97706', marginTop: 3, display: 'block' }}>⚠️ Caps Lock ativado</span>}
             </div>
 
-            <button type="submit" disabled={loading}
-              style={{ width:'100%', background:loading?'#b8a4d4':'linear-gradient(135deg, var(--ca-secondary) 0%, var(--ca-primary) 100%)', color:'#fff', fontWeight:700, fontSize:'1rem', padding:'0.85rem', borderRadius:10, border:'none', cursor:loading?'not-allowed':'pointer', boxShadow:'0 4px 15px rgba(74,20,140,0.3)', fontFamily:'inherit' }}>
-              {loading ? '⏳ Entrando...' : '🔑 Entrar'}
+            <button type="submit" className="auth-btn-primary" disabled={loading}>
+              {loading ? '⏳ Entrando...' : (
+                <>
+                  Entrar
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </>
+              )}
             </button>
           </form>
 
-          <p style={{ textAlign:'center', fontSize:'0.875rem', color:'var(--ca-primary-light)', marginTop:'1rem', marginBottom:0 }}>
-            Nao tem conta?{' '}
-            <Link to="/cadastro" style={{ fontWeight:700, color:'var(--ca-primary)', textDecoration:'underline' }}>Cadastre-se</Link>
-          </p>
+          <div className="auth-signup-row">
+            Não tem conta? <Link to="/cadastro">Cadastre-se</Link>
+          </div>
         </div>
+
+        <div className="auth-trust-strip">
+          <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" />
+          </svg>
+          Seus dados protegidos com criptografia
+        </div>
+
+        <p className="auth-footer-link">© 2026 CLICKAGENDA — Tecnologia CLICKAGENDA</p>
       </div>
-      </div>
-      <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.65)', fontSize: '0.78rem', padding: '0.75rem 1rem 1rem' }}>
-        © 2026 CLICKAGENDA — Tecnologia CLICKAGENDA
-      </p>
     </div>
   );
 }

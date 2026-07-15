@@ -162,11 +162,16 @@ export default function ConfiguracaoPage() {
 
   if (loading) return <LoadingSpinner />;
 
+  const oQueLevarLinhas = oQueLevar.split('\n').map(l => l.trim()).filter(Boolean);
+
   return (
     <main>
       <div className="container">
-        <h1 className="page-title">⚙️ Configurações da Empresa</h1>
-        <p className="page-subtitle">Personalize a marca da sua clínica: nome, cores e logo</p>
+        <div className="page-head" style={{ marginBottom: '1.5rem' }}>
+          <div className="dash-eyebrow">Empresa</div>
+          <h1 className="page-title">Configurações da empresa</h1>
+          <p className="page-subtitle">Personalize a identidade visual que seus clientes veem na vitrine e nos agendamentos.</p>
+        </div>
 
         {erro && <div className="error-box"><strong>Erro</strong>{erro}</div>}
         {sucesso && (
@@ -175,110 +180,216 @@ export default function ConfiguracaoPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="form-section">
-          <h2 style={{ color: 'var(--primary-dark)', fontSize: '1.1rem', marginBottom: '1rem', fontFamily: 'var(--font-heading)' }}>🎨 Identidade Visual</h2>
-          <div className="form-group">
-            <label>Logo da empresa</label>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-              <img
-                src={previewLogo || logoExibicao}
-                alt="Logo"
-                style={{ width: 72, height: 72, borderRadius: 12, objectFit: 'contain', background: 'var(--light)', border: '2px solid var(--border)' }}
-              />
-              <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={handleLogoChange} />
-            </div>
-          </div>
+        <div className="settings-grid">
+          {/* FORM COLUMN */}
+          <form onSubmit={handleSubmit} className="settings-form">
 
-          <div className="form-group">
-            <label>Nome fantasia</label>
-            <input
-              type="text"
-              value={nomeFantasia}
-              onChange={e => setNomeFantasia(e.target.value)}
-              placeholder="Nome da sua clínica"
-              required
-            />
-          </div>
+            {/* IDENTIDADE VISUAL */}
+            <div className="panel">
+              <div className="panel-head-icon">
+                <div className="panel-icon-box">🎨</div>
+                <div>
+                  <div className="panel-title">Identidade visual</div>
+                  <div className="panel-desc">Logo e nome que aparecem para os clientes</div>
+                </div>
+              </div>
 
-          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <div className="form-group" style={{ flex: 1, minWidth: 180 }}>
-              <label>Cor primária</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <input type="color" value={corPrimaria} onChange={e => setCorPrimaria(e.target.value)} style={{ width: 48, height: 44, padding: 2, minHeight: 44 }} />
-                <input type="text" value={corPrimaria} onChange={e => setCorPrimaria(e.target.value)} style={{ flex: 1 }} />
+              <div className="field">
+                <label>Logo da empresa</label>
+                <div className="logo-uploader">
+                  <div className="logo-preview-box">
+                    <img src={previewLogo || logoExibicao} alt="Logo" />
+                  </div>
+                  <div>
+                    <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={handleLogoChange} />
+                    <p style={{ fontSize: '0.75rem', color: 'var(--ink-faint)', marginTop: 6, marginBottom: 0 }}>PNG ou JPG, recomendado 400×400px</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="field">
+                <label>Nome fantasia</label>
+                <input
+                  type="text"
+                  value={nomeFantasia}
+                  onChange={e => setNomeFantasia(e.target.value)}
+                  placeholder="Nome da sua clínica"
+                  required
+                />
+              </div>
+
+              <div className="field-row">
+                <div className="field">
+                  <label>Cor primária</label>
+                  <div className="color-field">
+                    <div className="color-swatch-wrap">
+                      <input type="color" value={corPrimaria} onChange={e => setCorPrimaria(e.target.value)} />
+                    </div>
+                    <div>
+                      <div className="color-hex">{corPrimaria.toUpperCase()}</div>
+                      <div className="color-name">Botões e destaques</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="field">
+                  <label>Cor secundária</label>
+                  <div className="color-field">
+                    <div className="color-swatch-wrap">
+                      <input type="color" value={corSecundaria} onChange={e => setCorSecundaria(e.target.value)} />
+                    </div>
+                    <div>
+                      <div className="color-hex">{corSecundaria.toUpperCase()}</div>
+                      <div className="color-name">Ícones e indicadores</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="form-group" style={{ flex: 1, minWidth: 180 }}>
-              <label>Cor secundária</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <input type="color" value={corSecundaria} onChange={e => setCorSecundaria(e.target.value)} style={{ width: 48, height: 44, padding: 2, minHeight: 44 }} />
-                <input type="text" value={corSecundaria} onChange={e => setCorSecundaria(e.target.value)} style={{ flex: 1 }} />
+            {/* CONTATO */}
+            <div className="panel">
+              <div className="panel-head-icon">
+                <div className="panel-icon-box">📍</div>
+                <div>
+                  <div className="panel-title">Contato e localização</div>
+                  <div className="panel-desc">Como os clientes encontram e falam com você</div>
+                </div>
+              </div>
+
+              <div className="field">
+                <label>Telefone</label>
+                <input
+                  type="tel"
+                  value={telefone}
+                  onChange={e => setTelefone(e.target.value)}
+                  placeholder="(31) 99999-9999"
+                />
+              </div>
+
+              <div className="field">
+                <label>Endereço</label>
+                <input
+                  type="text"
+                  value={endereco}
+                  onChange={e => setEndereco(e.target.value)}
+                  placeholder="Rua Exemplo, 123 - Bairro - Cidade/UF"
+                />
+              </div>
+            </div>
+
+            {/* INFORMAÇÕES PARA O CLIENTE */}
+            <div className="panel">
+              <div className="panel-head-icon">
+                <div className="panel-icon-box">📋</div>
+                <div>
+                  <div className="panel-title">Informações para o cliente</div>
+                  <div className="panel-desc">Aparecem no lembrete de agendamento e na vitrine</div>
+                </div>
+              </div>
+
+              <div className="field">
+                <label>O que levar <span style={{ fontWeight: 500, color: 'var(--ink-faint)', fontSize: '0.8rem' }}>um item por linha</span></label>
+                <textarea
+                  value={oQueLevar}
+                  onChange={e => setOQueLevar(e.target.value)}
+                  rows={4}
+                  placeholder={'2 toalhas\n1 protetor solar\nGarrafinha de água'}
+                />
+              </div>
+
+              <div className="field">
+                <label>Recomendações</label>
+                <textarea
+                  value={recomendacoes}
+                  onChange={e => setRecomendacoes(e.target.value)}
+                  rows={4}
+                  placeholder={'Ir bem alimentado(a)\nEvitar banhos quentes no dia do procedimento'}
+                />
+              </div>
+            </div>
+
+            <div className="actions-bar" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button type="submit" className="btn btn-primary" disabled={salvando}>
+                {salvando ? '⏳ Salvando...' : '💾 Salvar alterações'}
+              </button>
+            </div>
+          </form>
+
+          {/* PREVIEW COLUMN */}
+          <div className="preview-col">
+            <div className="preview-label-row">
+              <span className="dot" />
+              <span className="preview-label">Pré-visualização em tempo real</span>
+            </div>
+
+            <div className="preview-card">
+              <div className="preview-hero" style={{ background: `linear-gradient(135deg, ${corPrimaria}, ${corSecundaria})` }}>
+                <div className="preview-hero-top">
+                  <div className="preview-logo">
+                    <img src={previewLogo || logoExibicao} alt="Logo" />
+                  </div>
+                  <div>
+                    <div className="preview-clinic-name">{nomeFantasia || 'Nome da sua clínica'}</div>
+                    <div className="preview-clinic-phone">📞 {telefone || '(00) 00000-0000'}</div>
+                  </div>
+                </div>
+                <div className="preview-book-btn">📅 Agendar horário</div>
+              </div>
+
+              <div className="preview-body">
+                <div>
+                  <div className="preview-block-title">Endereço</div>
+                  <div className="preview-address">📍 {endereco || 'Endereço não informado'}</div>
+                </div>
+
+                <div>
+                  <div className="preview-block-title">O que levar</div>
+                  {oQueLevarLinhas.length === 0 ? (
+                    <p className="preview-empty">Nenhum item adicionado ainda.</p>
+                  ) : (
+                    <ul className="preview-checklist">
+                      {oQueLevarLinhas.map((item, idx) => (
+                        <li key={idx}><span className="tag">✓</span><span>{item}</span></li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                <div>
+                  <div className="preview-block-title">Recomendações</div>
+                  <div className="preview-note">{recomendacoes || 'Nenhuma recomendação adicionada ainda.'}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="preview-swatches">
+              <div className="swatch-chip" style={{ background: corPrimaria }}>
+                <div className="swatch-label">Primária</div>
+                <div className="swatch-hex">{corPrimaria.toUpperCase()}</div>
+              </div>
+              <div className="swatch-chip" style={{ background: corSecundaria }}>
+                <div className="swatch-label">Secundária</div>
+                <div className="swatch-hex">{corSecundaria.toUpperCase()}</div>
               </div>
             </div>
           </div>
-
-          <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1.25rem 0' }} />
-          <h2 style={{ color: 'var(--primary-dark)', fontSize: '1.1rem', marginBottom: '1rem', fontFamily: 'var(--font-heading)' }}>📍 Contato e Localização</h2>
-
-          <div className="form-group">
-            <label>Telefone</label>
-            <input
-              type="tel"
-              value={telefone}
-              onChange={e => setTelefone(e.target.value)}
-              placeholder="(31) 99999-9999"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Endereço</label>
-            <input
-              type="text"
-              value={endereco}
-              onChange={e => setEndereco(e.target.value)}
-              placeholder="Rua Exemplo, 123 - Bairro - Cidade/UF"
-            />
-          </div>
-
-          <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1.25rem 0' }} />
-          <h2 style={{ color: 'var(--primary-dark)', fontSize: '1.1rem', marginBottom: '1rem', fontFamily: 'var(--font-heading)' }}>📋 Informações do Serviço</h2>
-
-          <div className="form-group">
-            <label>O que levar (um item por linha)</label>
-            <textarea
-              value={oQueLevar}
-              onChange={e => setOQueLevar(e.target.value)}
-              rows={4}
-              placeholder={'2 toalhas\n1 protetor solar\nGarrafinha de água'}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Recomendações (uma por linha)</label>
-            <textarea
-              value={recomendacoes}
-              onChange={e => setRecomendacoes(e.target.value)}
-              rows={4}
-              placeholder={'Ir bem alimentado(a)\nEvitar banhos quentes no dia do procedimento'}
-            />
-          </div>
-
-          <button type="submit" className="btn btn-primary" disabled={salvando}>
-            {salvando ? '⏳ Salvando...' : '💾 Salvar configurações'}
-          </button>
-        </form>
+        </div>
 
         {/* Gestão de Procedimentos */}
-        <div className="form-section">
-          <h2 style={{ color: 'var(--primary-dark)', marginBottom: '0.5rem', fontSize: '1.5rem' }}>🩺 Procedimentos</h2>
-          <p style={{ color: '#666', marginBottom: '1.5rem' }}>Cadastre e gerencie os procedimentos oferecidos.</p>
+        <div className="panel" style={{ marginTop: '1.5rem' }}>
+          <div className="panel-head-icon">
+            <div className="panel-icon-box">🩺</div>
+            <div>
+              <div className="panel-title">Procedimentos</div>
+              <div className="panel-desc">Cadastre e gerencie os procedimentos oferecidos</div>
+            </div>
+          </div>
 
           {erroProcedimentos && <div className="error-box"><strong>Erro</strong>{erroProcedimentos}</div>}
 
-          <form onSubmit={handleSubmitProcedimento} style={{ marginBottom: '1.5rem', background: 'var(--light)', padding: '1.25rem', borderRadius: 8 }}>
+          <form onSubmit={handleSubmitProcedimento} style={{ marginBottom: '1.5rem', background: 'var(--purple-50)', padding: '1.25rem', borderRadius: 'var(--radius-md)' }}>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              <div className="form-group" style={{ flex: 2, minWidth: 200 }}>
+              <div className="field" style={{ flex: 2, minWidth: 200 }}>
                 <label>Nome</label>
                 <input
                   type="text"
@@ -288,7 +399,7 @@ export default function ConfiguracaoPage() {
                   required
                 />
               </div>
-              <div className="form-group" style={{ flex: 1, minWidth: 120 }}>
+              <div className="field" style={{ flex: 1, minWidth: 120 }}>
                 <label>Preço (R$)</label>
                 <input
                   type="number"
@@ -299,7 +410,7 @@ export default function ConfiguracaoPage() {
                   required
                 />
               </div>
-              <div className="form-group" style={{ flex: 1, minWidth: 120 }}>
+              <div className="field" style={{ flex: 1, minWidth: 120 }}>
                 <label>Duração</label>
                 <input
                   type="text"
@@ -309,7 +420,7 @@ export default function ConfiguracaoPage() {
                   required
                 />
               </div>
-              <div className="form-group" style={{ flex: 1, minWidth: 160 }}>
+              <div className="field" style={{ flex: 1, minWidth: 160 }}>
                 <label>Categoria</label>
                 <select
                   value={formProcedimento.categoria}
@@ -320,7 +431,7 @@ export default function ConfiguracaoPage() {
                 </select>
               </div>
             </div>
-            <div className="form-group">
+            <div className="field">
               <label>Descrição</label>
               <input
                 type="text"
@@ -342,15 +453,15 @@ export default function ConfiguracaoPage() {
           {loadingProcedimentos ? (
             <LoadingSpinner />
           ) : procedimentos.length === 0 ? (
-            <p style={{ color: '#999' }}>Nenhum procedimento cadastrado ainda.</p>
+            <p style={{ color: 'var(--ink-faint)' }}>Nenhum procedimento cadastrado ainda.</p>
           ) : (
             <div className="item-list">
               {procedimentos.map(proc => (
                 <div key={proc.id} className="item-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
                   <div>
                     <strong>{proc.nome}</strong>
-                    <p style={{ margin: '0.2rem 0 0', color: '#666', fontSize: '0.9rem' }}>{proc.descricao}</p>
-                    <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: '#999' }}>
+                    <p style={{ margin: '0.2rem 0 0', color: 'var(--ink-soft)', fontSize: '0.9rem' }}>{proc.descricao}</p>
+                    <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: 'var(--ink-faint)' }}>
                       R$ {proc.preco.toFixed(2)} · ⏱️ {proc.duracao} · {proc.categoria === 'bronzeamento' ? 'Principal' : 'Complementar'}
                     </p>
                   </div>

@@ -107,123 +107,119 @@ export default function RegisterPage() {
     }
   };
 
-  const inp = (hasError?: string): React.CSSProperties => ({
-    width:'100%', border:`2px solid ${hasError ? '#e53e3e' : 'var(--border)'}`, borderRadius:10,
-    padding:'0.7rem 2.5rem 0.7rem 0.7rem', fontSize:'1rem', outline:'none',
-    boxSizing:'border-box', fontFamily:'inherit', transition:'border-color 0.2s',
-  });
-
   const senhaForca = forca(form.senha);
 
   return (
-    <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column', background:'linear-gradient(160deg, #2b0a4e 0%, var(--ca-primary) 35%, var(--ca-primary-light) 65%, var(--ca-secondary) 100%)' }}>
-      <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'2rem 1rem', position:'relative', overflow:'hidden' }}>
-      <div style={{ position:'absolute', top:'-20%', right:'-10%', width:'60vw', height:'60vw', maxWidth:500, borderRadius:'50%', background:'rgba(255,255,255,0.08)', pointerEvents:'none' }} />
-      <div style={{ position:'absolute', bottom:'-15%', left:'-10%', width:'50vw', height:'50vw', maxWidth:400, borderRadius:'50%', background:'rgba(0,137,123,0.15)', pointerEvents:'none' }} />
+    <div className="auth-page">
+      <div className="auth-blob auth-blob-1" />
+      <div className="auth-blob auth-blob-2" />
 
-      <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:380 }}>
-        <div style={{ textAlign:'center', marginBottom:'1.25rem' }}>
-          <div style={{ display:'flex', justifyContent:'center', marginBottom:'0.75rem' }}>
-            <div style={{ width:80, height:80, borderRadius:'50%', border:'3px solid rgba(255,255,255,0.8)', overflow:'hidden', boxShadow:'0 0 25px rgba(74,20,140,0.5), 0 4px 15px rgba(0,0,0,0.4)', background:'var(--ca-primary)', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <img src={logoExibicao} alt={nomeExibicao} style={{ width:'80%', height:'80%', objectFit:'contain' }} />
-            </div>
+      <div className="auth-stage">
+        <div className="auth-logo-block">
+          <div className="auth-logo-mark">
+            <img src={logoExibicao} alt={nomeExibicao} />
           </div>
-          <h1 style={{ fontSize:'1.6rem', fontWeight:700, color:'#fff', textShadow:'0 2px 12px rgba(0,0,0,0.5)', margin:0 }}>{nomeExibicao}</h1>
+          <div className="auth-wordmark">{nomeExibicao}</div>
         </div>
 
-        <div style={{ background:'#fff', borderRadius:20, padding:'1.5rem', boxShadow:'0 20px 60px rgba(0,0,0,0.35)' }}>
-          <h2 style={{ color:'var(--ca-primary)', fontWeight:700, fontSize:'1.05rem', textAlign:'center', marginBottom:4, marginTop:0 }}>Criar conta</h2>
-          <p style={{ color:'var(--ca-primary-light)', fontSize:'0.82rem', textAlign:'center', marginBottom:'1rem', marginTop:0 }}>Cadastre-se para agendar sua sessao</p>
+        <div className="auth-card">
+          <div className="auth-head">
+            <div className="auth-title">Criar conta</div>
+            <div className="auth-sub">Cadastre-se para agendar sua sessão</div>
+          </div>
 
-          {erro && <div style={{ background:'#fff5f5', borderLeft:'4px solid #e53e3e', padding:'0.75rem', borderRadius:6, color:'#c53030', fontSize:'0.875rem', marginBottom:'0.75rem' }}>{erro}</div>}
+          {erro && (
+            <div style={{ background: 'var(--red-50)', borderLeft: '4px solid var(--red-600)', padding: '0.75rem', borderRadius: 6, color: '#b91c1c', fontSize: '0.85rem', marginBottom: '0.75rem' }}>
+              {erro}
+            </div>
+          )}
 
-          <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', gap:'0.65rem' }}>
-            {/* Nome */}
-            <div>
-              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:3 }}>Nome completo</label>
-              <input type="text" name="nome" value={form.nome} onChange={handleChange} required autoComplete="name" style={inp(erros.nome)} placeholder="Seu nome completo" />
-              {erros.nome && <span style={{ fontSize:'0.75rem', color:'#e53e3e', marginTop:2, display:'block' }}>⚠️ {erros.nome}</span>}
+          <form onSubmit={handleSubmit}>
+            <div className="auth-field">
+              <label htmlFor="nome">Nome completo</label>
+              <div className="auth-input-wrap">
+                <span className="leading-icon">👤</span>
+                <input type="text" id="nome" name="nome" value={form.nome} onChange={handleChange} required autoComplete="name" placeholder="Seu nome completo" />
+              </div>
+              {erros.nome && <span style={{ fontSize: '0.75rem', color: 'var(--red-600)', marginTop: 2, display: 'block' }}>⚠️ {erros.nome}</span>}
             </div>
 
-            {/* Email */}
-            <div>
-              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:3 }}>Email</label>
-              <input type="email" name="email" value={form.email} onChange={handleChange} required autoComplete="email" style={inp(erros.email)} placeholder="seu@email.com" />
-              {erros.email && <span style={{ fontSize:'0.75rem', color:'#e53e3e', marginTop:2, display:'block' }}>⚠️ {erros.email}</span>}
+            <div className="auth-field">
+              <label htmlFor="email">Email</label>
+              <div className="auth-input-wrap">
+                <span className="leading-icon">📧</span>
+                <input type="email" id="email" name="email" value={form.email} onChange={handleChange} required autoComplete="email" placeholder="seu@email.com" />
+              </div>
+              {erros.email && <span style={{ fontSize: '0.75rem', color: 'var(--red-600)', marginTop: 2, display: 'block' }}>⚠️ {erros.email}</span>}
             </div>
 
-            {/* Telefone */}
-            <div>
-              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:3 }}>Telefone</label>
-              <input type="tel" name="telefone" value={form.telefone} onChange={handleChange} required autoComplete="tel" style={inp(erros.telefone)} placeholder="(31) 99999-9999" maxLength={16} />
-              {erros.telefone && <span style={{ fontSize:'0.75rem', color:'#e53e3e', marginTop:2, display:'block' }}>⚠️ {erros.telefone}</span>}
+            <div className="auth-field">
+              <label htmlFor="telefone">Telefone</label>
+              <div className="auth-input-wrap">
+                <span className="leading-icon">📱</span>
+                <input type="tel" id="telefone" name="telefone" value={form.telefone} onChange={handleChange} required autoComplete="tel" placeholder="(31) 99999-9999" maxLength={16} />
+              </div>
+              {erros.telefone && <span style={{ fontSize: '0.75rem', color: 'var(--red-600)', marginTop: 2, display: 'block' }}>⚠️ {erros.telefone}</span>}
             </div>
 
-            {/* Senha */}
-            <div>
-              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:3 }}>Senha</label>
-              <div style={{ position:'relative' }}>
+            <div className="auth-field">
+              <label htmlFor="senha">Senha</label>
+              <div className="auth-input-wrap">
+                <span className="leading-icon">🔒</span>
                 <input
-                  type={mostrarSenha ? 'text' : 'password'} name="senha" value={form.senha}
+                  type={mostrarSenha ? 'text' : 'password'} id="senha" name="senha" value={form.senha}
                   onChange={handleChange} onKeyDown={handleCapsLock} onKeyUp={handleCapsLock}
-                  required autoComplete="new-password" style={inp(erros.senha)} placeholder="Minimo 6 caracteres"
+                  required autoComplete="new-password" placeholder="Mínimo 6 caracteres"
                 />
-                <button type="button" onClick={() => setMostrarSenha(p => !p)}
-                  style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'var(--ca-primary-light)', fontSize:'1rem', padding:4 }}>
+                <button type="button" className="auth-toggle-visibility" onClick={() => setMostrarSenha(p => !p)} aria-label="Mostrar senha">
                   {mostrarSenha ? '🙈' : '👁️'}
                 </button>
               </div>
               {form.senha && (
-                <div style={{ marginTop:4 }}>
-                  <div style={{ display:'flex', gap:3, marginBottom:2 }}>
-                    {[1,2,3,4,5].map(i => (
-                      <div key={i} style={{ flex:1, height:3, borderRadius:2, background: i <= senhaForca.nivel ? senhaForca.cor : 'var(--border)', transition:'background 0.3s' }} />
+                <div style={{ marginTop: 6 }}>
+                  <div style={{ display: 'flex', gap: 3, marginBottom: 2 }}>
+                    {[1, 2, 3, 4, 5].map(i => (
+                      <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= senhaForca.nivel ? senhaForca.cor : 'var(--line)', transition: 'background 0.3s' }} />
                     ))}
                   </div>
-                  <span style={{ fontSize:'0.72rem', color: senhaForca.cor }}>Forca: {senhaForca.texto}</span>
+                  <span style={{ fontSize: '0.72rem', color: senhaForca.cor }}>Força: {senhaForca.texto}</span>
                 </div>
               )}
-              {capsLock && <span style={{ fontSize:'0.75rem', color:'#d97706', marginTop:2, display:'block' }}>⚠️ Caps Lock ativado</span>}
-              {erros.senha && <span style={{ fontSize:'0.75rem', color:'#e53e3e', marginTop:2, display:'block' }}>⚠️ {erros.senha}</span>}
+              {capsLock && <span style={{ fontSize: '0.75rem', color: '#d97706', marginTop: 2, display: 'block' }}>⚠️ Caps Lock ativado</span>}
+              {erros.senha && <span style={{ fontSize: '0.75rem', color: 'var(--red-600)', marginTop: 2, display: 'block' }}>⚠️ {erros.senha}</span>}
             </div>
 
-            {/* Confirmar Senha */}
-            <div>
-              <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'var(--ca-primary)', marginBottom:3 }}>Confirmar senha</label>
-              <div style={{ position:'relative' }}>
+            <div className="auth-field">
+              <label htmlFor="confirmarSenha">Confirmar senha</label>
+              <div className="auth-input-wrap">
+                <span className="leading-icon">🔒</span>
                 <input
-                  type={mostrarConfirmar ? 'text' : 'password'} name="confirmarSenha" value={form.confirmarSenha}
+                  type={mostrarConfirmar ? 'text' : 'password'} id="confirmarSenha" name="confirmarSenha" value={form.confirmarSenha}
                   onChange={handleChange} onKeyDown={handleCapsLock} onKeyUp={handleCapsLock}
-                  required autoComplete="new-password" style={inp(erros.confirmarSenha)} placeholder="Repita a senha"
+                  required autoComplete="new-password" placeholder="Repita a senha"
                 />
-                <button type="button" onClick={() => setMostrarConfirmar(p => !p)}
-                  style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'var(--ca-primary-light)', fontSize:'1rem', padding:4 }}>
+                <button type="button" className="auth-toggle-visibility" onClick={() => setMostrarConfirmar(p => !p)} aria-label="Mostrar confirmação de senha">
                   {mostrarConfirmar ? '🙈' : '👁️'}
                 </button>
               </div>
               {form.confirmarSenha && !erros.confirmarSenha && (
-                <span style={{ fontSize:'0.75rem', color:'#16a34a', marginTop:2, display:'block' }}>✅ Senhas coincidem</span>
+                <span style={{ fontSize: '0.75rem', color: '#16a34a', marginTop: 2, display: 'block' }}>✅ Senhas coincidem</span>
               )}
-              {erros.confirmarSenha && <span style={{ fontSize:'0.75rem', color:'#e53e3e', marginTop:2, display:'block' }}>⚠️ {erros.confirmarSenha}</span>}
-              {capsLock && <span style={{ fontSize:'0.75rem', color:'#d97706', marginTop:2, display:'block' }}>⚠️ Caps Lock ativado</span>}
+              {erros.confirmarSenha && <span style={{ fontSize: '0.75rem', color: 'var(--red-600)', marginTop: 2, display: 'block' }}>⚠️ {erros.confirmarSenha}</span>}
             </div>
 
-            <button type="submit" disabled={loading}
-              style={{ width:'100%', background:loading?'#b8a4d4':'linear-gradient(135deg, var(--ca-secondary) 0%, var(--ca-primary) 100%)', color:'#fff', fontWeight:700, fontSize:'1rem', padding:'0.85rem', borderRadius:10, border:'none', cursor:loading?'not-allowed':'pointer', boxShadow:'0 4px 15px rgba(74,20,140,0.3)', fontFamily:'inherit', marginTop:4 }}>
+            <button type="submit" className="auth-btn-primary" disabled={loading}>
               {loading ? '⏳ Criando conta...' : '✅ Criar conta'}
             </button>
           </form>
 
-          <p style={{ textAlign:'center', fontSize:'0.875rem', color:'var(--ca-primary-light)', marginTop:'1rem', marginBottom:0 }}>
-            Ja tem conta?{' '}
-            <Link to="/login" style={{ fontWeight:700, color:'var(--ca-primary)', textDecoration:'underline' }}>Entrar</Link>
-          </p>
+          <div className="auth-signup-row">
+            Já tem conta? <Link to="/login">Entrar</Link>
+          </div>
         </div>
+
+        <p className="auth-footer-link">© 2026 CLICKAGENDA — Tecnologia CLICKAGENDA</p>
       </div>
-      </div>
-      <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.65)', fontSize: '0.78rem', padding: '0.75rem 1rem 1rem' }}>
-        © 2026 CLICKAGENDA — Tecnologia CLICKAGENDA
-      </p>
     </div>
   );
 }
