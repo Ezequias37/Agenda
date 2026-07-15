@@ -47,6 +47,11 @@ export function AgendamentosPage() {
                 })()}</strong>
               </div>
               <PagamentoPixInfo agendamento={agendamentoConfirmado} />
+              {agendamentoConfirmado.formaPagamento === 'CARTAO_LOCAL' && (
+                <div style={{ background: '#eef2ff', border: '1px solid #c7d2fe', borderRadius: 10, padding: '0.75rem 1rem', margin: '1rem 0', color: '#3730a3', fontSize: '0.9rem' }}>
+                  💳 Pagamento combinado: <strong>cartão de crédito no local</strong>.
+                </div>
+              )}
               <button
                 onClick={() => setAgendamentoConfirmado(null)}
                 style={{ background: 'linear-gradient(135deg, var(--ca-secondary), var(--ca-primary))', color: '#fff', fontWeight: 700, padding: '0.65rem 2rem', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: '0.9rem' }}

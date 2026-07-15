@@ -67,6 +67,14 @@ public class Agendamento {
     /** Valor cobrado pela sessão (herda o preço do procedimento por padrão). */
     private Double valor;
 
+    /**
+     * Forma de pagamento escolhida na criação. PIX gera cobrança/QR Code
+     * automaticamente; CARTAO_LOCAL apenas marca que o pagamento será feito
+     * presencialmente (sem gerar cobrança PIX).
+     */
+    @Enumerated(EnumType.STRING)
+    private FormaPagamento formaPagamento = FormaPagamento.PIX;
+
     @Column(nullable = false)
     private Boolean pago = false;
 

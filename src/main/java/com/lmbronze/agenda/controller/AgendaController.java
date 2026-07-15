@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.lmbronze.agenda.model.Agendamento;
 import com.lmbronze.agenda.model.Cliente;
+import com.lmbronze.agenda.model.FormaPagamento;
 import com.lmbronze.agenda.model.Procedimento;
 import com.lmbronze.agenda.model.Role;
 import com.lmbronze.agenda.model.StatusAgendamento;
@@ -192,6 +193,17 @@ public class AgendaController {
             agendamento.setProcedimento(proc);
         }
 
+        // O cliente pode ter vindo do JSON só com o "id" preenchido (ex.: admin
+        // criando para um cliente existente) — recarrega a entidade completa
+        // do banco antes de salvar, senão nome/email/CPF ficam nulos e a
+        // cobrança PIX no Asaas falha com "parâmetro name deve ser informado".
+        if (agendamento.getCliente() != null && agendamento.getCliente().getId() != null) {
+            Cliente clienteCompleto = clienteRepository.findById(agendamento.getCliente().getId()).orElse(null);
+            if (clienteCompleto != null) {
+                agendamento.setCliente(clienteCompleto);
+            }
+        }
+
         Agendamento salvo = agendamentoRepository.save(agendamento);
         emailService.enviarConfirmacaoAgendamento(salvo);
         if (whatsAppService.enviarConfirmacao(salvo)) {
@@ -202,12 +214,14 @@ public class AgendaController {
         if (salvo.getValor() == null && salvo.getProcedimento() != null) {
             salvo.setValor(salvo.getProcedimento().getPreco());
         }
-        AsaasService.CobrancaPix cobranca = asaasService.gerarCobrancaPix(salvo);
-        if (cobranca != null) {
-            salvo.setCodigoPagamento(cobranca.id());
-            salvo.setQrCodePix(cobranca.qrCodeBase64());
-            salvo.setPixCopiaECola(cobranca.copiaECola());
-            salvo.setLinkPagamento(cobranca.linkPagamento());
+        if (salvo.getFormaPagamento() == null || salvo.getFormaPagamento() == FormaPagamento.PIX) {
+            AsaasService.CobrancaPix cobranca = asaasService.gerarCobrancaPix(salvo);
+            if (cobranca != null) {
+                salvo.setCodigoPagamento(cobranca.id());
+                salvo.setQrCodePix(cobranca.qrCodeBase64());
+                salvo.setPixCopiaECola(cobranca.copiaECola());
+                salvo.setLinkPagamento(cobranca.linkPagamento());
+            }
         }
         salvo = agendamentoRepository.save(salvo);
 

@@ -28,8 +28,8 @@ export default function CasosPendentesPage() {
     try {
       await casoSucessoService.aprovar(id);
       setCasos(prev => prev.filter(c => c.id !== id));
-    } catch {
-      alert('Erro ao aprovar o case. Tente novamente.');
+    } catch (err: any) {
+      alert(err?.response?.data?.erro || 'Erro ao aprovar o case. Tente novamente.');
     }
   };
 

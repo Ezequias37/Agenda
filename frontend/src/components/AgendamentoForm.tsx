@@ -23,6 +23,7 @@ export function AgendamentoForm({ clientes, clienteFixo, onSubmit, onSuccess }: 
   const [slotSelecionado, setSlotSelecionado] = useState<SlotDTO | null>(null);
   const [procedimentos, setProcedimentos] = useState<Procedimento[]>([]);
   const [loadingProcedimentos, setLoadingProcedimentos] = useState(true);
+  const [formaPagamento, setFormaPagamento] = useState<'PIX' | 'CARTAO_LOCAL'>('PIX');
 
   useEffect(() => {
     let ativo = true;
@@ -66,6 +67,7 @@ export function AgendamentoForm({ clientes, clienteFixo, onSubmit, onSuccess }: 
         dataHora: slotSelecionado.dataHora,
         procedimento: { id: selectedProcedimento.id },
         status: 'AGENDADO',
+        formaPagamento,
       };
       let criado: Agendamento | void;
       if (onSubmit) { criado = await onSubmit(data); }
@@ -155,6 +157,20 @@ export function AgendamentoForm({ clientes, clienteFixo, onSubmit, onSuccess }: 
           )}
         </div>
       )}
+
+      <div className="form-group">
+        <label>💳 Forma de Pagamento</label>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, border: `2px solid ${formaPagamento === 'PIX' ? 'var(--ca-secondary)' : 'var(--border)'}`, borderRadius: 10, padding: '0.6rem 1rem', cursor: 'pointer', flex: 1, minWidth: 200, fontWeight: 500 }}>
+            <input type="radio" name="formaPagamento" value="PIX" checked={formaPagamento === 'PIX'} onChange={() => setFormaPagamento('PIX')} style={{ width: 'auto', minHeight: 'auto' }} />
+            🔵 PIX (gera QR Code)
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, border: `2px solid ${formaPagamento === 'CARTAO_LOCAL' ? 'var(--ca-secondary)' : 'var(--border)'}`, borderRadius: 10, padding: '0.6rem 1rem', cursor: 'pointer', flex: 1, minWidth: 200, fontWeight: 500 }}>
+            <input type="radio" name="formaPagamento" value="CARTAO_LOCAL" checked={formaPagamento === 'CARTAO_LOCAL'} onChange={() => setFormaPagamento('CARTAO_LOCAL')} style={{ width: 'auto', minHeight: 'auto' }} />
+            💳 Cartão de Crédito (no local)
+          </label>
+        </div>
+      </div>
 
       <button type="submit" className="btn btn-primary"
         disabled={loading || !selectedProcedimento || !slotSelecionado}>

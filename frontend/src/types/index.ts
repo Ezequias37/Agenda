@@ -98,6 +98,7 @@ export interface Agendamento {
   whatsappCancelamentoEnviado?: boolean;
   valor?: number | null;
   pago?: boolean;
+  formaPagamento?: 'PIX' | 'CARTAO_LOCAL';
   codigoPagamento?: string | null;
   qrCodePix?: string | null;
   pixCopiaECola?: string | null;
@@ -131,6 +132,7 @@ export interface CreateAgendamentoDTO {
   dataHora: string;
   procedimento: Procedimento;
   status: string;
+  formaPagamento?: 'PIX' | 'CARTAO_LOCAL';
 }
 
 export interface ApiResponse<T> {
